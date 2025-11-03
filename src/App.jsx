@@ -4,7 +4,7 @@ import Hero from './components/Hero';
 import Footer from './components/Footer';
 import PerfumesPage from './pages/PerfumesPage';
 import AboutPage from './pages/AboutPage';
-import LoginPage from './pages/LoginPage';
+// import LoginPage from './pages/LoginPage';
 import PerfumeCard from './components/PerfumeCard';
 import localProducts from './data/products.json';
 
@@ -133,9 +133,9 @@ export default function App() {
         )}
         {currentPage === 'perfumes' && <PerfumesPage />}
         {currentPage === 'about' && <AboutPage />}
-        {currentPage === 'login' && (
+        {/* {currentPage === 'login' && (
           <LoginPage setCurrentPage={setCurrentPage} setIsLoggedIn={setIsLoggedIn} />
-        )}
+        )} */}
       </main>
 
       <Footer />

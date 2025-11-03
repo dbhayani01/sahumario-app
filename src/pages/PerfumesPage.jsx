@@ -45,9 +45,38 @@ export default function PerfumesPage() {
               </div>
               <button
                 className="mt-4 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700"
-                onClick={() => addToCart(selectedPerfume)}
+                onClick={() => {
+                  addToCart(selectedPerfume);
+                  setSelectedPerfume((prev) => ({ ...prev, qty: 1 }));
+                }}
               >
-                Add to Cart
+                {selectedPerfume.qty > 0 ? (
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateQty(selectedPerfume.id, selectedPerfume.qty - 1);
+                        setSelectedPerfume((prev) => ({ ...prev, qty: prev.qty - 1 }));
+                      }}
+                      className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                    >
+                      -
+                    </button>
+                    <span>{selectedPerfume.qty}</span>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        updateQty(selectedPerfume.id, selectedPerfume.qty + 1);
+                        setSelectedPerfume((prev) => ({ ...prev, qty: prev.qty + 1 }));
+                      }}
+                      className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                    >
+                      +
+                    </button>
+                  </div>
+                ) : (
+                  "Add to Cart"
+                )}
               </button>
             </div>
           </div>

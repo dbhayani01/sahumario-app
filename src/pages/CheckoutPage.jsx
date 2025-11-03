@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useCart } from "../context/cartContext";
 import { useOrders } from "../context/OrdersContext";
-import { useAuth } from "../context/AuthContext";  // ✅ safe to import
 import { api } from "../lib/api";
 
 const STATES = ["Maharashtra", "Gujarat", "Karnataka", "Delhi", "Tamil Nadu", "Telangana", "West Bengal", "Rajasthan"];
@@ -11,8 +10,6 @@ function formatINR(n) {
 }
 
 export default function CheckoutPage({ setCurrentPage }) {
-  // ✅ Hooks are called inside the component body
-  const { token } = useAuth();
   const { items, subtotal, tax, total, TAX_RATE } = useCart();
   const { /* addOrder not used now; backend creates the order */ } = useOrders();
 
@@ -46,7 +43,6 @@ export default function CheckoutPage({ setCurrentPage }) {
   async function placeOrder(e) {
     e.preventDefault();
     if (!canSubmit) return;
-    if (!token) { alert("Please login before placing order."); return; }
 
     try {
       const body = { address: form, payment: {
@@ -55,13 +51,26 @@ export default function CheckoutPage({ setCurrentPage }) {
         cardLast4: payment.method === "CARD" ? payment.cardNumber.replace(/\s+/g, "").slice(-4) : undefined,
       }, coupon_code: coupon || null };
 
-      const order = await api("/orders", { method: "POST", token, body });
+      const order = await api("/orders", { method: "POST", body });
       alert(`Order placed! Order ID: ${order.order_id}`);
       setCurrentPage?.("orders");
     } catch (err) {
       alert((err && err.message) || "Failed to place order");
       console.error(err);
     }
+  }
+
+  async function sendCartToWhatsApp() {
+    const phoneNumber = "+919974599911"; // Replace with your phone number
+    const cartDetails = items.map(item => `${item.name} x${item.qty}`).join("\n");
+    const message = `Cart Details:\n${cartDetails}\nTotal: ${formatINR(total)}`;
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+  }
+
+  async function handleCheckout(e) {
+    e.preventDefault();
+    sendCartToWhatsApp();
   }
 
   if (items.length === 0) {
@@ -80,7 +89,7 @@ export default function CheckoutPage({ setCurrentPage }) {
     <section className="mx-auto max-w-5xl px-4 py-10">
       <h2 className="text-2xl font-semibold">Checkout</h2>
 
-      <form onSubmit={placeOrder} className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <form onSubmit={handleCheckout} className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Address */}
         <div className="md:col-span-2">
           <div className="rounded-xl border border-gray-200 p-4">
@@ -186,13 +195,19 @@ export default function CheckoutPage({ setCurrentPage }) {
               </div>
             </div>
 
-            <button type="submit" disabled={!canSubmit}
-              className="mt-6 w-full py-2.5 rounded-lg bg-amber-600 text-white hover:bg-amber-700 disabled:opacity-50">
-              Place Order
+            <button type="submit"
+              className="mt-6 w-full py-2.5 rounded-lg bg-amber-600 text-white hover:bg-amber-700">
+              Checkout
             </button>
             <button type="button" className="mt-2 w-full py-2.5 rounded-lg border border-gray-200 hover:bg-gray-50"
               onClick={() => setCurrentPage("perfumes")}>
               Continue Shopping
+            </button>
+            <button
+              className="mt-2 w-full py-2.5 rounded-lg bg-green-600 text-white hover:bg-green-700"
+              onClick={sendCartToWhatsApp}
+            >
+              Send Cart to WhatsApp
             </button>
           </div>
         </div>

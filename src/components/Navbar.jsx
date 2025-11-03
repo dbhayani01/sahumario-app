@@ -1,13 +1,11 @@
 // src/components/Navbar.jsx
 import React, { useState } from "react";
-import { Menu, X, User, ShoppingCart } from "lucide-react";
+import { Menu, X, ShoppingCart } from "lucide-react";
 import { useCart } from "../context/cartContext";
-import { useAuth } from "../context/AuthContext"; // ✅
 
 export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggleTheme, theme }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { count } = useCart();
-  const { user, logout } = useAuth(); // ✅
 
   const LinkButton = ({ id, children }) => (
     <button
@@ -37,8 +35,6 @@ export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggl
             <LinkButton id="home">Home</LinkButton>
             <LinkButton id="perfumes">Perfumes</LinkButton>
             <LinkButton id="about">About</LinkButton>
-            {/* 🔒 Only show Orders link to logged-in users */}
-            {user && <LinkButton id="orders">Orders</LinkButton>}
           </nav>
 
           {/* Right actions */}
@@ -60,25 +56,6 @@ export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggl
             >
               {theme === 'light' ? '🌞' : '🌙'}
             </button>
-
-            {/* Auth buttons */}
-            {user ? (
-              <button
-                onClick={logout}
-                className="px-3 py-2 rounded-lg border border-gray-200 hover:bg-gray-50"
-              >
-                Logout
-              </button>
-            ) : (
-              <button
-                onClick={() => setCurrentPage("login")}
-                className="px-4 py-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white rounded-lg hover:shadow-lg"
-              >
-                <span className="inline-flex items-center gap-2">
-                  <User className="h-4 w-4" /> Login
-                </span>
-              </button>
-            )}
           </div>
 
           {/* Mobile cart icon directly visible */}
@@ -109,19 +86,6 @@ export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggl
               <button onClick={() => { setCurrentPage("home"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100">Home</button>
               <button onClick={() => { setCurrentPage("perfumes"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100">Perfumes</button>
               <button onClick={() => { setCurrentPage("about"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100">About</button>
-
-              {/* 🔒 Only show Orders on mobile when logged in */}
-              {user && (
-                <button onClick={() => { setCurrentPage("orders"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100">
-                  Orders
-                </button>
-              )}
-
-              {!user && (
-                <button onClick={() => { setCurrentPage("login"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md bg-amber-600 text-white">
-                  Login
-                </button>
-              )}
             </div>
           </div>
         )}

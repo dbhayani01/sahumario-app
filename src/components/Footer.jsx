@@ -1,9 +1,6 @@
 import React from "react";
-import { useAuth } from "../context/AuthContext";
 
 export default function Footer({ setCurrentPage }) {
-  const { user } = useAuth();
-
   return (
     <footer className="mt-12 border-t border-gray-100">
       <div className="mx-auto max-w-6xl px-4 py-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
@@ -45,17 +42,6 @@ export default function Footer({ setCurrentPage }) {
                 About
               </button>
             </li>
-            {/* Show Orders only if logged in */}
-            {user && (
-              <li>
-                <button
-                  onClick={() => setCurrentPage?.("orders")}
-                  className="hover:text-gray-900"
-                >
-                  Orders
-                </button>
-              </li>
-            )}
             <li>
               <a href="mailto:sahumariofragnance@gmail.com" className="hover:text-gray-900">
                 Contact
