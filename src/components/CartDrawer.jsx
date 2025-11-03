@@ -12,18 +12,8 @@ function formatINR(n) {
 }
 
 export default function CartDrawer({ open, onClose, onCheckout }) {
-  // From server-synced CartContext (CRA version):
-  // items: [{ id, product_id, name, price, qty }]
-  // updateQty(itemId, newQty), removeItem(itemId), clearCart()
-  const {
-    items,
-    updateQty,
-    removeItem,
-    clearCart,
-    subtotal,
-    tax,
-    total,
-  } = useCart();
+  const { items, updateQty, removeItem, clearCart, subtotal } = useCart();
+  const total = subtotal; // Ensure total is directly derived from subtotal
 
   return (
     <div
@@ -68,18 +58,18 @@ export default function CartDrawer({ open, onClose, onCheckout }) {
           ) : (
             <ul className="space-y-4">
               {items.map((item) => (
-                <li key={item.id} className="flex items-start justify-between gap-3">
+                <li key={item.product_id} className="flex items-start justify-between gap-3">
                   <div>
                     <div className="font-medium">{item.name}</div>
                     <div className="mt-1 text-sm text-amber-700">
                       {formatINR(item.price)}
                     </div>
 
-                    {/* qty controls — set absolute quantity using item.id */}
+                    {/* qty controls */}
                     <div className="mt-2 inline-flex items-center gap-2">
                       <button
                         className="p-1.5 rounded border hover:bg-gray-50"
-                        onClick={() => updateQty(item.id, item.qty - 1)}
+                        onClick={() => updateQty(item.product_id, item.qty - 1)}
                         aria-label={`Decrease ${item.name}`}
                         type="button"
                       >
@@ -88,7 +78,7 @@ export default function CartDrawer({ open, onClose, onCheckout }) {
                       <span className="min-w-6 text-center">{item.qty}</span>
                       <button
                         className="p-1.5 rounded border hover:bg-gray-50"
-                        onClick={() => updateQty(item.id, item.qty + 1)}
+                        onClick={() => updateQty(item.product_id, item.qty + 1)}
                         aria-label={`Increase ${item.name}`}
                         type="button"
                       >
@@ -101,10 +91,9 @@ export default function CartDrawer({ open, onClose, onCheckout }) {
                     <div className="font-semibold">
                       {formatINR(item.qty * item.price)}
                     </div>
-                    {/* Use removeItem (server CartContext) */}
                     <button
                       className="mt-2 inline-flex items-center gap-1 text-red-600 hover:text-red-700 text-sm"
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeItem(item.product_id)}
                       type="button"
                     >
                       <Trash2 className="h-4 w-4" /> Remove
@@ -123,12 +112,6 @@ export default function CartDrawer({ open, onClose, onCheckout }) {
               <span className="text-gray-600">Subtotal</span>
               <span className="font-medium">{formatINR(subtotal)}</span>
             </div>
-            {tax > 0 && (
-              <div className="flex justify-between">
-                <span className="text-gray-600">GST</span>
-                <span className="font-medium">{formatINR(tax)}</span>
-              </div>
-            )}
             <div className="flex justify-between text-base pt-2 border-t mt-2">
               <span className="font-semibold">Total</span>
               <span className="font-semibold">{formatINR(total)}</span>
@@ -146,7 +129,10 @@ export default function CartDrawer({ open, onClose, onCheckout }) {
             </button>
             <button
               className="px-4 py-2 rounded-lg border border-gray-200 hover:bg-gray-50"
-              onClick={clearCart}
+              onClick={() => {
+                clearCart();
+                window.location.href = '/perfumes';
+              }}
               disabled={items.length === 0}
               type="button"
             >

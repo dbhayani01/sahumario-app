@@ -47,7 +47,7 @@ export default function Hero({ onExplore }) {
             animate ? "opacity-100" : "opacity-0"
           }`}
         >
-          <span className="animate-bounce">↓ Scroll Down</span>
+          {/* Removed Scroll Down */}
         </div>
       </div>
     </section>

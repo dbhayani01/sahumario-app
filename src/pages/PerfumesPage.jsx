@@ -8,6 +8,12 @@ export default function PerfumesPage() {
   const { items, addToCart, updateQty } = useCart();
   const [selectedPerfume, setSelectedPerfume] = useState(null);
 
+  // Added a function to handle clearing the cart and resetting the selected perfume.
+  function clearCart() {
+    items.forEach((item) => updateQty(item.product_id, 0));
+    setSelectedPerfume(null);
+  }
+
   const products = localProducts.map((product) => {
     const cartItem = items.find((item) => item.product_id === product.id);
     return {

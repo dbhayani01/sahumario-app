@@ -1,11 +1,9 @@
-// src/App.jsx (or App.js)
 import React, { useState } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import PerfumesPage from "./pages/PerfumesPage";
 import AboutPage from "./pages/AboutPage";
-// import LoginPage from "./pages/LoginPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrdersPage from "./pages/OrdersPage";
 import CartDrawer from "./components/CartDrawer";
