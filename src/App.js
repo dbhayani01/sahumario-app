@@ -32,7 +32,7 @@ export default function App() {
         {currentPage === "checkout" && <CheckoutPage setCurrentPage={setCurrentPage} />}
         {currentPage === "orders" && <OrdersPage />}
       </main>
-
+      <PerfumesPage />
       <Footer setCurrentPage={setCurrentPage} />
 
       <CartDrawer
