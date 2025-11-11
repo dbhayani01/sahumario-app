@@ -26,13 +26,18 @@ export default function App() {
       />
 
       <main className="flex-1">
-        {currentPage === "home" && <Hero onExplore={() => setCurrentPage("perfumes")} />}
+        {currentPage === "home" && (
+          <>
+            <Hero onExplore={() => setCurrentPage("perfumes")} />
+            <PerfumesPage />
+          </>
+        )}
         {currentPage === "perfumes" && <PerfumesPage />}
         {currentPage === "about" && <AboutPage />}
         {currentPage === "checkout" && <CheckoutPage setCurrentPage={setCurrentPage} />}
         {currentPage === "orders" && <OrdersPage />}
       </main>
-      <PerfumesPage />
+      {/* <PerfumesPage /> */}
       <Footer setCurrentPage={setCurrentPage} />
 
       <CartDrawer

@@ -8,18 +8,18 @@ export default function PerfumesPage() {
   const { items, addToCart, updateQty } = useCart();
   const [selectedPerfume, setSelectedPerfume] = useState(null);
 
-
 useEffect(() => {
   if (selectedPerfume) {
     const updatedItem = items.find(item => item.product_id === selectedPerfume.id);
     if (updatedItem) {
       setSelectedPerfume(prev => ({ ...prev, qty: updatedItem.qty }));
-    } else {
-      setSelectedPerfume(null);
+    } 
+    else {
+      // Item removed from cart, keep selection but set qty to 0
+      setSelectedPerfume(prev => prev ? { ...prev, qty: 0 } : null);
     }
   }
-}, [items]);
-
+}, [items, selectedPerfume]);
 
 
 
@@ -56,6 +56,8 @@ useEffect(() => {
               <h4 className="text-xl font-bold">{selectedPerfume.name}</h4>
               <p className="mt-2 text-gray-700">{selectedPerfume.description}</p>
               <div className="mt-4 font-medium">
+                {/* Price: ₹{Number(selectedPerfume.price).toLocaleString("en-IN")} */}
+                {/* Price: ₹{selectedPerfume.price ? Number(selectedPerfume.price).toLocaleString("en-IN") : "0"} */}
                 Price: ₹{Number(selectedPerfume?.price ?? 0).toLocaleString("en-IN")}
               </div>
               <button

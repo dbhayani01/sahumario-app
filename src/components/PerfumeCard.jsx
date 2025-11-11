@@ -38,7 +38,8 @@ export default function PerfumeCard({
           {description}
         </p>
         <div className="mt-3 font-medium hidden sm:block">
-          ₹{Number(price).toLocaleString("en-IN")}
+          {/* ₹{Number(price).toLocaleString("en-IN")} */}
+          ₹{price ? Number(price).toLocaleString("en-IN") : "0"}
         </div>
         {qty > 0 && (
           <div className="mt-4 flex items-center space-x-2 hidden sm:flex">
