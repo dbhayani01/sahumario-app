@@ -8,17 +8,17 @@ export default function PerfumesPage() {
   const { items, addToCart, updateQty } = useCart();
   const [selectedPerfume, setSelectedPerfume] = useState(null);
 
-
+/* eslint-disable react-hooks/exhaustive-deps */
 useEffect(() => {
-  if (selectedPerfume) {
-    const updatedItem = items.find(item => item.product_id === selectedPerfume.id);
-    if (updatedItem) {
-      setSelectedPerfume(prev => ({ ...prev, qty: updatedItem.qty }));
-    } else {
-      setSelectedPerfume(null);
+    if (selectedPerfume) {
+      const updatedItem = items.find(item => item.product_id === selectedPerfume.id);
+      if (updatedItem) {
+        setSelectedPerfume(prev => ({ ...prev, qty: updatedItem.qty }));
+      } else {
+        setSelectedPerfume(null);
+      }
     }
-  }
-}, [items]);
+  }, [items]);
 
 
 
