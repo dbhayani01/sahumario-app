@@ -1,5 +1,5 @@
 // src/pages/PerfumesPage.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PerfumeCard from "../components/PerfumeCard";
 import localProducts from "../data/products.json";
 import { useCart } from "../context/cartContext";
@@ -8,11 +8,19 @@ export default function PerfumesPage() {
   const { items, addToCart, updateQty } = useCart();
   const [selectedPerfume, setSelectedPerfume] = useState(null);
 
-  // Added a function to handle clearing the cart and resetting the selected perfume.
-  function clearCart() {
-    items.forEach((item) => updateQty(item.product_id, 0));
-    setSelectedPerfume(null);
+useEffect(() => {
+  if (selectedPerfume) {
+    const updatedItem = items.find(item => item.product_id === selectedPerfume.id);
+    if (updatedItem) {
+      setSelectedPerfume(prev => ({ ...prev, qty: updatedItem.qty }));
+    } else {
+      // Item removed from cart, keep selection but set qty to 0
+      setSelectedPerfume(prev => ({ ...prev, qty: 0 }));
+    }
   }
+}, [items, selectedPerfume]);
+
+
 
   const products = localProducts.map((product) => {
     const cartItem = items.find((item) => item.product_id === product.id);

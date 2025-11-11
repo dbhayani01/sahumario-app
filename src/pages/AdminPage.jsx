@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { api } from "../lib/api";
 
 export default function AdminPage() {
   const [orders, setOrders] = useState([]);

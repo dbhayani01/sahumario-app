@@ -8,13 +8,13 @@ function formatINR(n) {
 }
 
 export default function CheckoutPage({ setCurrentPage }) {
-  const { items, subtotal, total, clearCart } = useCart();
+  const { items, subtotal, clearCart } = useCart();
 
   const [form, setForm] = useState({
     name: "", phone: "", email: "",
     address: "", city: "", state: "Maharashtra", pin: "", notes: "",
   });
-  const [coupon, setCoupon] = useState("");
+  // const [coupon, setCoupon] = useState("");
 
   // Updated the sendCartToWhatsApp function to validate form fields and ensure no empty data is sent
   async function sendCartToWhatsApp() {
@@ -27,7 +27,7 @@ export default function CheckoutPage({ setCurrentPage }) {
     const cartDetails = items.map(item => `${item.name} x${item.qty}`).join("\n");
     const addressDetails = `Name: ${form.name}\nPhone: ${form.phone}\nAddress: ${form.address}, ${form.city}, ${form.state} - ${form.pin}`;
     const paymentDetails = ""; // Placeholder for removed payment details
-    const message = `Cart Details:\n${cartDetails}\n\n${addressDetails}\n\n${paymentDetails}\n\nTotal: ${formatINR(total)}`;
+    const message = `Cart Details:\n${cartDetails}\n\n${addressDetails}\n\n${paymentDetails}\n\nTotal: ${formatINR(subtotal)}`;
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
 

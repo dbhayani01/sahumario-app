@@ -1,6 +1,6 @@
 // src/components/PerfumeCard.jsx
 import SafeImage from "./SafeImage";
-import { useState } from "react";
+// import { useState } from "react";
 
 export default function PerfumeCard({
   name,
@@ -13,11 +13,11 @@ export default function PerfumeCard({
   onUpdateQty,
   onClick,
 }) {
-  const [showDetails, setShowDetails] = useState(false);
+  // const [showDetails, setShowDetails] = useState(false);
 
-  const toggleDetails = () => {
-    setShowDetails((prev) => !prev);
-  };
+  // const toggleDetails = () => {
+  //   setShowDetails((prev) => !prev);
+  // };
 
   return (
     <article
