@@ -46,13 +46,13 @@ const ShippingForm = React.memo(({ onFormChange, initialValues = {} }) => {
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    const newForm = { ...form, [name]: value };
-    setForm(newForm);
-    
-    const newErrors = validateField(name, value);
-    setErrors(newErrors);
-    
-    onFormChange(newForm);
+    setForm(prev => {
+      const newForm = { ...prev, [name]: value };
+      const newErrors = validateField(name, value);
+      setErrors(newErrors);
+      onFormChange(newForm);
+      return newForm;
+    });
   }, [onFormChange, validateField]);
 
   const isValid = !Object.keys(errors).length && form.name && form.phone && form.address && form.city && form.state && form.pin;

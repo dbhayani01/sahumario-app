@@ -27,7 +27,7 @@ export default function PerfumesPage() {
       const updatedItem = items.find(item => item.product_id === selectedPerfume.id);
       setSelectedPerfume(prev => ({ ...prev, qty: updatedItem ? updatedItem.qty : 0 }));
     }
-  }, [items, selectedPerfume?.id]);
+  }, [items, selectedPerfume]);
 
   const handleSelectProduct = useCallback((product) => {
     setSelectedPerfume(product);
