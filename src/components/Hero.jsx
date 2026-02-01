@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { Button } from "./ui";
 
-export default function Hero({ onExplore }) {
+const Hero = React.memo(({ onExplore }) => {
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimate(true), 200);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleExplore = useCallback(() => {
+    onExplore?.();
+  }, [onExplore]);
 
   return (
     <section
@@ -35,21 +40,19 @@ export default function Hero({ onExplore }) {
             animate ? "opacity-100" : "opacity-0"
           }`}
         >
-          <button
-            onClick={onExplore}
-            className="px-6 py-3 rounded-lg bg-amber-600 text-white hover:bg-amber-700 shadow-lg transition"
+          <Button
+            onClick={handleExplore}
+            size="lg"
+            className="shadow-lg"
           >
             Explore Collection
-          </button>
-        </div>
-        <div
-          className={`mt-12 text-gray-500 transition-opacity duration-1000 delay-700 ${
-            animate ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          {/* Removed Scroll Down */}
+          </Button>
         </div>
       </div>
     </section>
   );
-}
+});
+
+Hero.displayName = 'Hero';
+
+export default Hero;

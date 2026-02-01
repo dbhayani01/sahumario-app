@@ -1,17 +1,27 @@
 // src/components/SafeImage.jsx
-import React from "react";
+import React, { useState, useCallback } from "react";
 
-export default function SafeImage({ src, alt, className, ...rest }) {
-  const [err, setErr] = React.useState(false);
-  const fallback = "/products/placeholder.jpg"; // keep a placeholder in public/products
+const SafeImage = React.memo(({ src, alt, className, ...rest }) => {
+  const [err, setErr] = useState(false);
+  const fallback = "/products/placeholder.jpg";
+
+  const handleError = useCallback(() => {
+    setErr(true);
+  }, []);
+
   return (
     <img
       src={err ? fallback : src}
       alt={alt}
-      onError={() => setErr(true)}
+      onError={handleError}
       loading="lazy"
+      decoding="async"
       className={className}
       {...rest}
     />
   );
-}
+});
+
+SafeImage.displayName = 'SafeImage';
+
+export default SafeImage;

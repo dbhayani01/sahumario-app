@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Navbar from "./components/Navbar";
+import React, { useState, useCallback } from "react";
+import NavbarOptimized from "./components/NavbarOptimized";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import PerfumesPage from "./pages/PerfumesPage";
@@ -11,34 +11,59 @@ import CartDrawer from "./components/CartDrawer";
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
   const [showCart, setShowCart] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const goCheckout = () => {
+  const goCheckout = useCallback(() => {
     setShowCart(false);
     setCurrentPage("checkout");
+  }, []);
+
+  const handleSetCurrentPage = useCallback((page) => {
+    setCurrentPage(page);
+    setIsMenuOpen(false);
+  }, []);
+
+  const handleCartClick = useCallback(() => {
+    setShowCart(true);
+  }, []);
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case "home":
+        return (
+          <>
+            <Hero onExplore={() => handleSetCurrentPage("perfumes")} />
+            <PerfumesPage />
+          </>
+        );
+      case "perfumes":
+        return <PerfumesPage />;
+      case "about":
+        return <AboutPage />;
+      case "checkout":
+        return <CheckoutPage setCurrentPage={handleSetCurrentPage} />;
+      case "orders":
+        return <OrdersPage />;
+      default:
+        return <PerfumesPage />;
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-gray-900">
-      <Navbar
+      <NavbarOptimized
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
-        onCartClick={() => setShowCart(true)}
+        setCurrentPage={handleSetCurrentPage}
+        onCartClick={handleCartClick}
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
       />
 
       <main className="flex-1">
-        {currentPage === "home" && (
-          <>
-            <Hero onExplore={() => setCurrentPage("perfumes")} />
-            <PerfumesPage />
-          </>
-        )}
-        {currentPage === "perfumes" && <PerfumesPage />}
-        {currentPage === "about" && <AboutPage />}
-        {currentPage === "checkout" && <CheckoutPage setCurrentPage={setCurrentPage} />}
-        {currentPage === "orders" && <OrdersPage />}
+        {renderPage()}
       </main>
-      {/* <PerfumesPage /> */}
-      <Footer setCurrentPage={setCurrentPage} />
+
+      <Footer setCurrentPage={handleSetCurrentPage} />
 
       <CartDrawer
         open={showCart}
