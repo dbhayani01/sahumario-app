@@ -38,7 +38,7 @@ const PerfumeCardOptimized = React.memo(({
         </p>
         
         <div className="mt-3 font-medium hidden sm:block">
-          ₹{Number(price).toLocaleString('en-IN')}
+          {formatINR(price)}
         </div>
 
         {quantity > 0 && (

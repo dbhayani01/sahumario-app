@@ -80,7 +80,7 @@ const ProductDetailModal = React.memo(({
               </div>
             ) : (
               <Button
-                onClick={onAdd}
+                onClick={() => onAdd(product)}
                 className="w-full"
                 size="lg"
               >
