@@ -53,9 +53,7 @@ CartItem.displayName = 'CartItem';
 
 const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
   const { items, updateQty, removeItem, clearCart, subtotal } = useCart();
-  const TAX_RATE = 0.1;
-  const tax = Math.round(subtotal * TAX_RATE);
-  const total = subtotal + tax;
+  const total = subtotal;
 
   const handleClearCart = useCallback(() => {
     clearCart();
@@ -83,14 +81,14 @@ const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
 
       {/* Panel */}
       <aside
-        className={`absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-xl transition-transform sm:w-3/4 xs:w-full ${
+        className={`absolute right-0 top-0 h-full w-full max-w-md bg-[var(--color-surface)] shadow-xl transition-transform sm:w-3/4 xs:w-full ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
         role="dialog"
         aria-modal="true"
         aria-label="Shopping cart"
       >
-        <div className="flex items-center justify-between p-4 border-b">
+        <div className="flex items-center justify-between p-4 border-b border-[var(--color-border)]">
           <h3 className="text-lg font-semibold">Your Cart</h3>
           <button
             className="p-2 rounded hover:bg-gray-100 transition-colors"
@@ -126,10 +124,6 @@ const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
             <div className="flex justify-between">
               <span className="text-gray-600">Subtotal</span>
               <span className="font-medium">{formatINR(subtotal)}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Tax (10%)</span>
-              <span className="font-medium">{formatINR(tax)}</span>
             </div>
             <div className="flex justify-between text-base pt-2 border-t mt-2">
               <span className="font-semibold">Total</span>

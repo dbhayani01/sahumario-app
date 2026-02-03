@@ -1,12 +1,21 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 const CartCtx = createContext();
+const CART_STORAGE_KEY = "sahumario_cart";
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
 
-  const addToCart = useCallback((product) => {
-    if (!product?.id || !product?.price) {
+  const addToCart = (product) => {
+    if (!product.id || !product.price) {
+      alert("Invalid product");
       return;
     }
     const newItem = {
@@ -51,22 +60,11 @@ export function CartProvider({ children }) {
   const tax = useMemo(() => Math.round(subtotal * TAX_RATE), [subtotal]);
   const total = useMemo(() => subtotal + tax, [subtotal, tax]);
 
-  const value = useMemo(
-    () => ({
-      items,
-      addToCart,
-      updateQty,
-      removeItem,
-      clearCart,
-      count,
-      subtotal,
-      tax,
-      total,
-    }),
-    [items, addToCart, updateQty, removeItem, clearCart, count, subtotal, tax, total]
+  return (
+    <CartCtx.Provider value={{ items, addToCart, updateQty, removeItem, clearCart, count, subtotal, tax, total }}>
+      {children}
+    </CartCtx.Provider>
   );
-
-  return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;
 }
 
 export function useCart() {

@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 import { useCart } from '../context/cartContext';
+import { useTheme } from '../context/ThemeContext';
 
 const NavLink = React.memo(({ id, isActive, onClick, children }) => (
   <button
@@ -23,6 +24,7 @@ const NavbarOptimized = React.memo(({
   setIsMenuOpen
 }) => {
   const { count } = useCart();
+  const { theme, toggleTheme } = useTheme();
 
   const handleNavClick = useCallback((page) => {
     setCurrentPage?.(page);
@@ -30,7 +32,7 @@ const NavbarOptimized = React.memo(({
   }, [setCurrentPage, setIsMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-gray-100">
+    <header className="sticky top-0 z-40 bg-[var(--color-surface)]/90 backdrop-blur border-b border-[var(--color-border)] transition-colors duration-200">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -61,21 +63,33 @@ const NavbarOptimized = React.memo(({
             </NavLink>
           </nav>
 
-          {/* Cart icon - always visible */}
-          <button 
-            className="relative p-2 rounded-full hover:bg-gray-100 transition" 
-            title="Cart" 
-            type="button" 
-            onClick={onCartClick}
-            aria-label={`Shopping cart with ${count} items`}
-          >
-            <ShoppingCart className="h-5 w-5" />
-            {count > 0 && (
-              <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-amber-600 text-white text-xs flex items-center justify-center font-semibold">
-                {count > 99 ? '99+' : count}
-              </span>
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full hover:bg-[var(--color-surface-muted)] transition"
+              title="Toggle theme"
+              type="button"
+              aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
+            >
+              {theme === 'light' ? '🌞' : '🌙'}
+            </button>
+
+            {/* Cart icon - always visible */}
+            <button 
+              className="relative p-2 rounded-full hover:bg-[var(--color-surface-muted)] transition" 
+              title="Cart" 
+              type="button" 
+              onClick={onCartClick}
+              aria-label={`Shopping cart with ${count} items`}
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {count > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-amber-600 text-white text-xs flex items-center justify-center font-semibold">
+                  {count > 99 ? '99+' : count}
+                </span>
+              )}
+            </button>
+          </div>
 
           {/* Mobile menu button */}
           <button 

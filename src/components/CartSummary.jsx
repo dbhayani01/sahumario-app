@@ -3,9 +3,7 @@ import { Button } from './ui';
 import { formatINR } from '../utils/money';
 
 const CartSummary = React.memo(({ items, subtotal, onCheckout, onContinueShopping, loading = false }) => {
-  const TAX_RATE = 0.1;
-  const tax = Math.round(subtotal * TAX_RATE);
-  const total = subtotal + tax;
+  const total = subtotal;
 
   return (
     <div className="space-y-4">
@@ -24,10 +22,6 @@ const CartSummary = React.memo(({ items, subtotal, onCheckout, onContinueShoppin
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">Subtotal</span>
           <span className="font-medium">{formatINR(subtotal)}</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Tax (10%)</span>
-          <span className="font-medium">{formatINR(tax)}</span>
         </div>
         <div className="flex justify-between text-base border-t pt-2">
           <span className="font-semibold">Total</span>
