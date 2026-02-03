@@ -26,7 +26,7 @@ export default function OrdersPage() {
                 <div>Placed on: {new Date(o.createdAt).toLocaleString()}</div>
               </div>
               <div className="text-right">
-                <div className="font-semibold">{formatINR(o.total)}</div>
+                <div className="font-semibold">{formatINR(o.total ?? o.subtotal)}</div>
                 <div className="text-sm text-gray-600">{o.items.reduce((s, p) => s + p.qty, 0)} items</div>
               </div>
             </div>
@@ -69,10 +69,7 @@ export default function OrdersPage() {
             <div className="px-4 py-3 border-t text-sm">
               <div className="flex items-center justify-end gap-6">
                 <div className="text-gray-600">Subtotal: <span className="font-medium text-gray-800">{formatINR(o.subtotal)}</span></div>
-                {o.tax > 0 && (
-                  <div className="text-gray-600">Tax: <span className="font-medium text-gray-800">{formatINR(o.tax)}</span></div>
-                )}
-                <div className="font-semibold">Paid: {formatINR(o.total)}</div>
+                <div className="font-semibold">Paid: {formatINR(o.total ?? o.subtotal)}</div>
               </div>
             </div>
           </div>

@@ -17,7 +17,7 @@ export function OrdersProvider({ children }) {
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
   }, [orders]);
 
-  // orderData: { id, items, subtotal, tax, total, address, payment, createdAt }
+  // orderData: { id, items, subtotal, total, address, payment, createdAt }
   const addOrder = (orderData) => {
     setOrders((prev) => [orderData, ...prev]); // newest first
   };

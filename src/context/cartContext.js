@@ -1,13 +1,31 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 const CartCtx = createContext();
+const CART_STORAGE_KEY = "sahumario_cart";
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(() => {
+    try {
+      const storedItems = localStorage.getItem(CART_STORAGE_KEY);
+      return storedItems ? JSON.parse(storedItems) : [];
+    } catch {
+      return [];
+    }
+  });
 
-  const addToCart = (product) => {
-    if (!product.id || !product.price) {
-      alert("Invalid product");
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
+
+  const addToCart = useCallback((product) => {
+    if (!product?.id || !product?.price) {
       return;
     }
     const newItem = {
@@ -25,9 +43,9 @@ export function CartProvider({ children }) {
       }
       return [...prevItems, newItem];
     });
-  };
+  }, []);
 
-  const updateQty = (itemId, qty) => {
+  const updateQty = useCallback((itemId, qty) => {
     setItems((prevItems) => {
       if (qty === 0) {
         return prevItems.filter((item) => item.product_id !== itemId);
@@ -36,27 +54,35 @@ export function CartProvider({ children }) {
         item.product_id === itemId ? { ...item, qty } : item
       );
     });
-  };
+  }, []);
 
-  const removeItem = (itemId) => {
+  const removeItem = useCallback((itemId) => {
     setItems((prevItems) => prevItems.filter((item) => item.product_id !== itemId));
-  };
+  }, []);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setItems([]);
-  };
+  }, []);
 
   const count = useMemo(() => items.reduce((s, p) => s + p.qty, 0), [items]);
   const subtotal = useMemo(() => items.reduce((s, p) => s + p.qty * p.price, 0), [items]);
-  const TAX_RATE = 0.1; // Example tax rate
-  const tax = useMemo(() => Math.round(subtotal * TAX_RATE), [subtotal]);
-  const total = useMemo(() => subtotal + tax, [subtotal, tax]);
+  const total = subtotal;
 
-  return (
-    <CartCtx.Provider value={{ items, addToCart, updateQty, removeItem, clearCart, count, subtotal, tax, total }}>
-      {children}
-    </CartCtx.Provider>
+  const value = useMemo(
+    () => ({
+      items,
+      addToCart,
+      updateQty,
+      removeItem,
+      clearCart,
+      count,
+      subtotal,
+      total,
+    }),
+    [items, addToCart, updateQty, removeItem, clearCart, count, subtotal, total]
   );
+
+  return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;
 }
 
 export function useCart() {
