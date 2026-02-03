@@ -1,5 +1,5 @@
 // src/pages/PerfumesPage.jsx
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import ProductGrid from "../components/ProductGrid";
 import ProductDetailModal from "../components/ProductDetailModal";
 import SectionHeader from "../components/SectionHeader";
@@ -8,39 +8,46 @@ import { useCart } from "../context/cartContext";
 
 export default function PerfumesPage() {
   const { items, addToCart, updateQty } = useCart();
-  const [selectedPerfume, setSelectedPerfume] = useState(null);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
-  // Memoize products with quantity data
-  const products = useMemo(() => {
-    return localProducts.map((product) => {
-      const cartItem = items.find((item) => item.product_id === product.id);
-      return {
+  const itemQtyById = useMemo(
+    () =>
+      items.reduce((acc, item) => {
+        acc[item.product_id] = item.qty;
+        return acc;
+      }, {}),
+    [items]
+  );
+
+  const products = useMemo(
+    () =>
+      localProducts.map((product) => ({
         ...product,
-        qty: cartItem ? cartItem.qty : 0,
-      };
-    });
-  }, [items]);
+        qty: itemQtyById[product.id] ?? 0,
+      })),
+    [itemQtyById]
+  );
 
-  // Update selected product quantity when cart changes
-  useEffect(() => {
-    if (selectedPerfume) {
-      const updatedItem = items.find(item => item.product_id === selectedPerfume.id);
-      setSelectedPerfume(prev => ({ ...prev, qty: updatedItem ? updatedItem.qty : 0 }));
-    }
-  }, [items, selectedPerfume]);
+  const selectedPerfume = useMemo(
+    () => products.find((product) => product.id === selectedProductId) ?? null,
+    [products, selectedProductId]
+  );
 
   const handleSelectProduct = useCallback((product) => {
-    setSelectedPerfume(product);
+    setSelectedProductId(product.id);
   }, []);
 
   const handleCloseModal = useCallback(() => {
-    setSelectedPerfume(null);
+    setSelectedProductId(null);
   }, []);
 
-  const handleAddToCart = useCallback((product) => {
-    addToCart(product);
-    setSelectedPerfume(prev => ({ ...prev, qty: 1 }));
-  }, [addToCart]);
+  const handleAddToCart = useCallback(
+    (product) => {
+      addToCart(product);
+      setSelectedProductId(product.id);
+    },
+    [addToCart]
+  );
 
   const handleUpdateQty = useCallback((productId, newQty) => {
     updateQty(productId, newQty);
@@ -66,7 +73,7 @@ export default function PerfumesPage() {
       <div className="mt-8">
         <ProductGrid
           products={products}
-          selectedProductId={selectedPerfume?.id}
+          selectedProductId={selectedProductId}
           onSelectProduct={handleSelectProduct}
           onAddToCart={handleAddToCart}
           onUpdateQty={handleUpdateQty}
