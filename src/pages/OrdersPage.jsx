@@ -9,7 +9,7 @@ export default function OrdersPage() {
     return (
       <section className="mx-auto max-w-4xl px-4 py-10">
         <h2 className="text-2xl font-semibold">Your Orders</h2>
-        <p className="mt-3 text-gray-600">No orders yet.</p>
+        <p className="mt-3 text-[var(--color-muted)]">No orders yet.</p>
       </section>
     );
   }
@@ -19,15 +19,15 @@ export default function OrdersPage() {
       <h2 className="text-2xl font-semibold">Your Orders</h2>
       <div className="mt-6 space-y-6">
         {orders.map((o) => (
-          <div key={o.id} className="rounded-xl border border-gray-200 overflow-hidden">
-            <div className="px-4 py-3 bg-gray-50 flex items-center justify-between">
-              <div className="text-sm text-gray-700">
+          <div key={o.id} className="rounded-xl border border-[var(--color-border)] overflow-hidden">
+            <div className="px-4 py-3 bg-[var(--color-surface-muted)] flex items-center justify-between">
+              <div className="text-sm text-[var(--color-text)]">
                 <div className="font-medium">Order ID: {o.id}</div>
                 <div>Placed on: {new Date(o.createdAt).toLocaleString()}</div>
               </div>
               <div className="text-right">
                 <div className="font-semibold">{formatINR(o.total ?? o.subtotal)}</div>
-                <div className="text-sm text-gray-600">{o.items.reduce((s, p) => s + p.qty, 0)} items</div>
+                <div className="text-sm text-[var(--color-muted)]">{o.items.reduce((s, p) => s + p.qty, 0)} items</div>
               </div>
             </div>
 
@@ -37,16 +37,16 @@ export default function OrdersPage() {
                   <li key={it.name} className="py-3 flex items-center justify-between">
                     <div>
                       <div className="font-medium">{it.name}</div>
-                      <div className="text-sm text-gray-600">Qty: {it.qty}</div>
+                      <div className="text-sm text-[var(--color-muted)]">Qty: {it.qty}</div>
                     </div>
                     <div className="font-medium">{formatINR(it.qty * it.price)}</div>
                   </li>
                 ))}
               </ul>
 
-              <div className="rounded-lg border border-gray-200 p-3 text-sm">
+              <div className="rounded-lg border border-[var(--color-border)] p-3 text-sm bg-[var(--color-surface)]">
                 <div className="font-medium mb-2">Ship To</div>
-                <div className="text-gray-700">
+                <div className="text-[var(--color-text)]">
                   <div>{o.address.name}</div>
                   <div>{o.address.phone}</div>
                   {o.address.email && <div>{o.address.email}</div>}
@@ -56,7 +56,7 @@ export default function OrdersPage() {
                 </div>
 
                 <div className="mt-3 font-medium">Payment</div>
-                <div className="text-gray-700">
+                <div className="text-[var(--color-text)]">
                   {o.payment.method === "CARD"
                     ? `Card •••• ${o.payment.last4}`
                     : o.payment.method === "UPI"
@@ -66,10 +66,10 @@ export default function OrdersPage() {
               </div>
             </div>
 
-            <div className="px-4 py-3 border-t text-sm">
+            <div className="px-4 py-3 border-t border-[var(--color-border)] text-sm">
               <div className="flex items-center justify-end gap-6">
-                <div className="text-gray-600">Subtotal: <span className="font-medium text-gray-800">{formatINR(o.subtotal)}</span></div>
-                <div className="font-semibold">Paid: {formatINR(o.total ?? o.subtotal)}</div>
+                <div className="text-[var(--color-muted)]">Subtotal: <span className="font-medium text-[var(--color-text)]">{formatINR(o.subtotal)}</span></div>
+                <div className="font-semibold text-[var(--color-text)]">Paid: {formatINR(o.total ?? o.subtotal)}</div>
               </div>
             </div>
           </div>
