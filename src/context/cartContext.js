@@ -2,13 +2,11 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
 
 const CartCtx = createContext();
-const CART_STORAGE_KEY = "sahumario_cart";
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
@@ -33,6 +31,7 @@ export function CartProvider({ children }) {
       }
       return [...prevItems, newItem];
     });
+  };
 
   const updateQty = useCallback((itemId, qty) => {
     setItems((prevItems) => {
