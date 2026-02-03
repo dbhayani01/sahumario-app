@@ -7,7 +7,7 @@ const NavLink = React.memo(({ id, isActive, onClick, children }) => (
   <button
     onClick={() => onClick(id)}
     className={`${
-      isActive ? 'text-amber-600' : 'text-gray-700'
+      isActive ? 'text-amber-600' : 'text-[var(--color-muted)]'
     } hover:text-amber-600 transition px-3 py-2`}
   >
     {children}
@@ -93,7 +93,7 @@ const NavbarOptimized = React.memo(({
 
           {/* Mobile menu button */}
           <button 
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition" 
+            className="md:hidden p-2 rounded-lg hover:bg-[var(--color-surface-muted)] transition" 
             onClick={() => setIsMenuOpen?.(!isMenuOpen)} 
             aria-label="Toggle Menu" 
             type="button"
@@ -105,22 +105,22 @@ const NavbarOptimized = React.memo(({
         {/* Mobile nav */}
         {isMenuOpen && (
           <div className="md:hidden pb-3 animate-in fade-in duration-200">
-            <div className="flex flex-col gap-1 border-t border-gray-100 pt-3">
+            <div className="flex flex-col gap-1 border-t border-[var(--color-border)] pt-3">
               <button 
                 onClick={() => handleNavClick('home')} 
-                className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition"
+                className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)] transition"
               >
                 Home
               </button>
               <button 
                 onClick={() => handleNavClick('perfumes')} 
-                className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition"
+                className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)] transition"
               >
                 Perfumes
               </button>
               <button 
                 onClick={() => handleNavClick('about')} 
-                className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition"
+                className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)] transition"
               >
                 About
               </button>

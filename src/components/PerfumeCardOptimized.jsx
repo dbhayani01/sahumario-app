@@ -13,7 +13,7 @@ const PerfumeCardOptimized = React.memo(({
 
   return (
     <article
-      className="rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white cursor-pointer hover:shadow-md transition-shadow duration-200"
+      className="rounded-lg border border-[var(--color-border)] shadow-sm overflow-hidden bg-[var(--color-surface)] cursor-pointer hover:shadow-md transition-shadow duration-200"
       onClick={onClickCard}
       role="button"
       tabIndex={0}
@@ -23,7 +23,7 @@ const PerfumeCardOptimized = React.memo(({
         }
       }}
     >
-      <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
+      <div className="relative aspect-[4/5] bg-[var(--color-surface-muted)] overflow-hidden">
         <SafeImage
           src={image}
           alt={alt || name}
@@ -33,7 +33,7 @@ const PerfumeCardOptimized = React.memo(({
 
       <div className="p-4">
         <h4 className="font-semibold text-lg line-clamp-1">{name}</h4>
-        <p className="mt-1 text-sm text-gray-600 line-clamp-2 hidden sm:block">
+        <p className="mt-1 text-sm text-[var(--color-muted)] line-clamp-2 hidden sm:block">
           {description}
         </p>
         
@@ -48,7 +48,7 @@ const PerfumeCardOptimized = React.memo(({
                 e.stopPropagation();
                 onUpdateQty(id, quantity - 1);
               }}
-              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors"
+              className="px-3 py-1 bg-[var(--color-surface-muted)] rounded hover:bg-amber-600 hover:text-white transition-colors"
               aria-label={`Decrease ${name}`}
             >
               −
@@ -59,7 +59,7 @@ const PerfumeCardOptimized = React.memo(({
                 e.stopPropagation();
                 onUpdateQty(id, quantity + 1);
               }}
-              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition-colors"
+              className="px-3 py-1 bg-[var(--color-surface-muted)] rounded hover:bg-amber-600 hover:text-white transition-colors"
               aria-label={`Increase ${name}`}
             >
               +

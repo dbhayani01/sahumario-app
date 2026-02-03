@@ -46,7 +46,7 @@ export default function CheckoutPage({ setCurrentPage }) {
     return (
       <section className="mx-auto max-w-4xl px-4 py-10">
         <h2 className="text-2xl font-semibold">Checkout</h2>
-        <p className="mt-4 text-gray-600">Your cart is empty.</p>
+        <p className="mt-4 text-[var(--color-muted)]">Your cart is empty.</p>
         <Button 
           onClick={() => setCurrentPage("perfumes")}
           className="mt-4"

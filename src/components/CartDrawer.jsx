@@ -4,7 +4,7 @@ import { useCart } from "../context/cartContext";
 import { formatINR } from "../utils/money";
 
 const CartItem = React.memo(({ item, onUpdateQty, onRemove }) => (
-  <li className="flex items-start justify-between gap-3 pb-3 border-b last:border-b-0">
+  <li className="flex items-start justify-between gap-3 pb-3 border-b border-[var(--color-border)] last:border-b-0">
     <div>
       <div className="font-medium">{item.name}</div>
       <div className="mt-1 text-sm text-amber-700">
@@ -14,7 +14,7 @@ const CartItem = React.memo(({ item, onUpdateQty, onRemove }) => (
       {/* qty controls */}
       <div className="mt-2 inline-flex items-center gap-2">
         <button
-          className="p-1.5 rounded border hover:bg-gray-50 transition-colors"
+          className="p-1.5 rounded border border-[var(--color-border)] hover:bg-[var(--color-surface-muted)] transition-colors"
           onClick={() => onUpdateQty(item.product_id, item.qty - 1)}
           aria-label={`Decrease ${item.name}`}
           type="button"
@@ -23,7 +23,7 @@ const CartItem = React.memo(({ item, onUpdateQty, onRemove }) => (
         </button>
         <span className="min-w-6 text-center text-sm">{item.qty}</span>
         <button
-          className="p-1.5 rounded border hover:bg-gray-50 transition-colors"
+          className="p-1.5 rounded border border-[var(--color-border)] hover:bg-[var(--color-surface-muted)] transition-colors"
           onClick={() => onUpdateQty(item.product_id, item.qty + 1)}
           aria-label={`Increase ${item.name}`}
           type="button"
@@ -91,7 +91,7 @@ const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
         <div className="flex items-center justify-between p-4 border-b border-[var(--color-border)]">
           <h3 className="text-lg font-semibold">Your Cart</h3>
           <button
-            className="p-2 rounded hover:bg-gray-100 transition-colors"
+            className="p-2 rounded hover:bg-[var(--color-surface-muted)] transition-colors"
             onClick={onClose}
             aria-label="Close cart"
             type="button"
@@ -103,7 +103,7 @@ const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
         {/* Items */}
         <div className="p-4 overflow-y-auto max-h-[calc(100vh-220px)]">
           {items.length === 0 ? (
-            <p className="text-gray-600">Your cart is empty.</p>
+            <p className="text-[var(--color-muted)]">Your cart is empty.</p>
           ) : (
             <ul className="space-y-3">
               {items.map((item) => (
@@ -119,13 +119,13 @@ const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
         </div>
 
         {/* Summary & actions */}
-        <div className="p-4 border-t space-y-3">
+        <div className="p-4 border-t border-[var(--color-border)] space-y-3">
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-600">Subtotal</span>
+              <span className="text-[var(--color-muted)]">Subtotal</span>
               <span className="font-medium">{formatINR(subtotal)}</span>
             </div>
-            <div className="flex justify-between text-base pt-2 border-t mt-2">
+            <div className="flex justify-between text-base pt-2 border-t border-[var(--color-border)] mt-2">
               <span className="font-semibold">Total</span>
               <span className="font-semibold">{formatINR(total)}</span>
             </div>
@@ -140,7 +140,7 @@ const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
             Checkout
           </button>
           <button
-            className="w-full py-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full py-2.5 rounded-lg border border-[var(--color-border)] hover:bg-[var(--color-surface-muted)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             onClick={handleClearCart}
             disabled={items.length === 0}
             type="button"

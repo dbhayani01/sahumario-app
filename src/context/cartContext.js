@@ -2,16 +2,30 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
 } from "react";
 
 const CartCtx = createContext();
-const CART_STORAGE_KEY = "sahumario_cart";
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+  const storageKey = "sahumario_cart";
+  const [items, setItems] = useState(() => {
+    try {
+      const storedItems = localStorage.getItem(storageKey);
+      return storedItems ? JSON.parse(storedItems) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(items));
+    } catch {
+      // Ignore write errors in restricted environments.
+    }
+  }, [items, storageKey]);
 
   const addToCart = (product) => {
     if (!product.id || !product.price) {
@@ -33,6 +47,7 @@ export function CartProvider({ children }) {
       }
       return [...prevItems, newItem];
     });
+  };
 
   const updateQty = useCallback((itemId, qty) => {
     setItems((prevItems) => {
