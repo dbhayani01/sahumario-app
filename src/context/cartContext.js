@@ -9,7 +9,22 @@ import React, {
 const CartCtx = createContext();
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(() => {
+    try {
+      const storedItems = localStorage.getItem(CART_STORAGE_KEY);
+      return storedItems ? JSON.parse(storedItems) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    } catch {
+      // Ignore write errors in restricted environments.
+    }
+  }, [items]);
 
   const addToCart = (product) => {
     if (!product.id || !product.price) {

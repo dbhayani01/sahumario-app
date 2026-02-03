@@ -5,7 +5,7 @@ const SectionHeader = React.memo(({ title, subtitle, className = '' }) => {
     <div className={className}>
       <h2 className="text-2xl md:text-3xl font-semibold">{title}</h2>
       {subtitle && (
-        <p className="mt-1 text-gray-600">{subtitle}</p>
+        <p className="mt-1 text-[var(--color-muted)]">{subtitle}</p>
       )}
     </div>
   );
