@@ -9,23 +9,22 @@ import React, {
 const CartCtx = createContext();
 
 export function CartProvider({ children }) {
-  const storageKey = "sahumario_cart";
   const [items, setItems] = useState(() => {
     try {
-      const storedItems = localStorage.getItem(storageKey);
+      const storedItems = localStorage.getItem(CART_STORAGE_KEY);
       return storedItems ? JSON.parse(storedItems) : [];
     } catch {
       return [];
     }
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     try {
-      localStorage.setItem(storageKey, JSON.stringify(items));
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     } catch {
       // Ignore write errors in restricted environments.
     }
-  }, [items, storageKey]);
+  }, [items]);
 
   const addToCart = (product) => {
     if (!product.id || !product.price) {
