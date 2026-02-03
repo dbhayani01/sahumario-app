@@ -4,10 +4,11 @@ import React, {
   useContext,
   useMemo,
   useState,
+  useEffect,
 } from "react";
 
 const CartCtx = createContext();
-
+const CART_STORAGE_KEY = "sahumario_cart";
 export function CartProvider({ children }) {
   const [items, setItems] = useState(() => {
     try {
