@@ -11,21 +11,11 @@ const CartCtx = createContext();
 const CART_STORAGE_KEY = "sahumario_cart";
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState(() => {
-    try {
-      const storedItems = localStorage.getItem(CART_STORAGE_KEY);
-      return storedItems ? JSON.parse(storedItems) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
-
-  const addToCart = useCallback((product) => {
-    if (!product?.id || !product?.price) {
+  const addToCart = (product) => {
+    if (!product.id || !product.price) {
+      alert("Invalid product");
       return;
     }
     const newItem = {
@@ -43,7 +33,6 @@ export function CartProvider({ children }) {
       }
       return [...prevItems, newItem];
     });
-  }, []);
 
   const updateQty = useCallback((itemId, qty) => {
     setItems((prevItems) => {
@@ -66,23 +55,15 @@ export function CartProvider({ children }) {
 
   const count = useMemo(() => items.reduce((s, p) => s + p.qty, 0), [items]);
   const subtotal = useMemo(() => items.reduce((s, p) => s + p.qty * p.price, 0), [items]);
-  const total = subtotal;
+  const TAX_RATE = 0.1; // Example tax rate
+  const tax = useMemo(() => Math.round(subtotal * TAX_RATE), [subtotal]);
+  const total = useMemo(() => subtotal + tax, [subtotal, tax]);
 
-  const value = useMemo(
-    () => ({
-      items,
-      addToCart,
-      updateQty,
-      removeItem,
-      clearCart,
-      count,
-      subtotal,
-      total,
-    }),
-    [items, addToCart, updateQty, removeItem, clearCart, count, subtotal, total]
+  return (
+    <CartCtx.Provider value={{ items, addToCart, updateQty, removeItem, clearCart, count, subtotal, tax, total }}>
+      {children}
+    </CartCtx.Provider>
   );
-
-  return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;
 }
 
 export function useCart() {
