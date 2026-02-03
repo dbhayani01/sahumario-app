@@ -33,7 +33,6 @@ export function CartProvider({ children }) {
       }
       return [...prevItems, newItem];
     });
-  }, []);
 
   const updateQty = useCallback((itemId, qty) => {
     setItems((prevItems) => {
