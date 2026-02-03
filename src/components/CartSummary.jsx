@@ -36,7 +36,7 @@ const CartSummary = React.memo(({ items, subtotal, onCheckout, onContinueShoppin
           variant="success"
           className="w-full"
         >
-          {loading ? 'Processing...' : 'Send Cart to WhatsApp'}
+          {loading ? 'Processing...' : 'Pay Now'}
         </Button>
         <Button
           onClick={onContinueShopping}
