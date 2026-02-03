@@ -34,12 +34,12 @@ useEffect(() => {
   return (
     <section className="mx-auto max-w-6xl px-4 py-12">
       <h3 className="text-2xl md:text-3xl font-semibold">Our Collection</h3>
-      <p className="mt-1 text-gray-600">
+      <p className="mt-1 text-[var(--color-muted)]">
         Discover our range of authentic oil-based perfumes.
       </p>
 
       {selectedPerfume ? (
-        <div className="p-4 border rounded-lg bg-white shadow-md">
+        <div className="p-4 border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] shadow-md">
           <button
             className="text-sm text-amber-600 hover:underline"
             onClick={() => setSelectedPerfume(null)}
@@ -54,7 +54,7 @@ useEffect(() => {
             />
             <div>
               <h4 className="text-xl font-bold">{selectedPerfume.name}</h4>
-              <p className="mt-2 text-gray-700">{selectedPerfume.description}</p>
+              <p className="mt-2 text-[var(--color-text)]">{selectedPerfume.description}</p>
               <div className="mt-4 font-medium">
                 {/* Price: ₹{Number(selectedPerfume.price).toLocaleString("en-IN")} */}
                 {/* Price: ₹{selectedPerfume.price ? Number(selectedPerfume.price).toLocaleString("en-IN") : "0"} */}
@@ -75,7 +75,7 @@ useEffect(() => {
                         updateQty(selectedPerfume.id, selectedPerfume.qty - 1);
                         setSelectedPerfume((prev) => ({ ...prev, qty: prev.qty - 1 }));
                       }}
-                      className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                      className="px-3 py-1 bg-[var(--color-surface-muted)] rounded hover:bg-amber-600 hover:text-white transition-colors"
                     >
                       -
                     </button>
@@ -86,7 +86,7 @@ useEffect(() => {
                         updateQty(selectedPerfume.id, selectedPerfume.qty + 1);
                         setSelectedPerfume((prev) => ({ ...prev, qty: prev.qty + 1 }));
                       }}
-                      className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+                      className="px-3 py-1 bg-[var(--color-surface-muted)] rounded hover:bg-amber-600 hover:text-white transition-colors"
                     >
                       +
                     </button>

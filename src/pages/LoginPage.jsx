@@ -43,10 +43,10 @@ export default function LoginPage({ setCurrentPage, setIsLoggedIn }) {
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         {!isLogin && (
           <div>
-            <label className="text-sm text-gray-700">Full Name</label>
+            <label className="text-sm text-[var(--color-text)]">Full Name</label>
             <input
               type="text"
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
+              className="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[var(--color-muted)]"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
@@ -55,10 +55,10 @@ export default function LoginPage({ setCurrentPage, setIsLoggedIn }) {
         )}
 
         <div>
-          <label className="text-sm text-gray-700">Email</label>
+          <label className="text-sm text-[var(--color-text)]">Email</label>
           <input
             type="email"
-            className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600"
+            className="mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] px-3 py-2 focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[var(--color-muted)]"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             required
@@ -66,11 +66,11 @@ export default function LoginPage({ setCurrentPage, setIsLoggedIn }) {
         </div>
 
         <div>
-          <label className="text-sm text-gray-700">Password</label>
+          <label className="text-sm text-[var(--color-text)]">Password</label>
           <div className="mt-1 relative">
             <input
               type={showPassword ? "text" : "password"}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-amber-600"
+              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-amber-600 placeholder:text-[var(--color-muted)]"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
@@ -78,7 +78,7 @@ export default function LoginPage({ setCurrentPage, setIsLoggedIn }) {
             <button
               type="button"
               onClick={() => setShowPassword((s) => !s)}
-              className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+              className="absolute inset-y-0 right-2 flex items-center text-[var(--color-muted)] hover:text-amber-500"
               aria-label="Toggle password visibility"
             >
               {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}

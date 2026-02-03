@@ -5,15 +5,17 @@
   --color-surface-muted: #f1f5f9;
   --color-border: #e5e7eb;
   --color-muted: #64748b;
+  --color-hero-overlay: rgba(255, 255, 255, 0.35);
 }
 
 :root[data-theme="dark"] {
-  --color-bg: #0f172a;
-  --color-text: #e2e8f0;
-  --color-surface: #111827;
-  --color-surface-muted: #1f2937;
-  --color-border: #334155;
-  --color-muted: #94a3b8;
+  --color-bg: #2a1206;
+  --color-text: #fff7ed;
+  --color-surface: #3b1708;
+  --color-surface-muted: #4a1d0a;
+  --color-border: #7c2d12;
+  --color-muted: #fed7aa;
+  --color-hero-overlay: rgba(124, 45, 18, 0.55);
 }
 
 body {

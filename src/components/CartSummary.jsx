@@ -12,18 +12,18 @@ const CartSummary = React.memo(({ items, subtotal, onCheckout, onContinueShoppin
       <div className="space-y-2 max-h-64 overflow-y-auto">
         {items.map((item) => (
           <div key={item.product_id} className="flex justify-between text-sm">
-            <span className="text-gray-600">{item.name} x{item.qty}</span>
+            <span className="text-[var(--color-muted)]">{item.name} x{item.qty}</span>
             <span className="font-medium">{formatINR(item.price * item.qty)}</span>
           </div>
         ))}
       </div>
 
-      <div className="border-t pt-3 space-y-2">
+      <div className="border-t border-[var(--color-border)] pt-3 space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Subtotal</span>
+          <span className="text-[var(--color-muted)]">Subtotal</span>
           <span className="font-medium">{formatINR(subtotal)}</span>
         </div>
-        <div className="flex justify-between text-base border-t pt-2">
+        <div className="flex justify-between text-base border-t border-[var(--color-border)] pt-2">
           <span className="font-semibold">Total</span>
           <span className="font-semibold">{formatINR(total)}</span>
         </div>

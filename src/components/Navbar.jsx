@@ -10,14 +10,14 @@ export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggl
   const LinkButton = ({ id, children }) => (
     <button
       onClick={() => setCurrentPage?.(id)}
-      className={`${currentPage === id ? "text-amber-600" : "text-gray-700"} hover:text-amber-600 transition px-3 py-2`}
+      className={`${currentPage === id ? "text-amber-600" : "text-[var(--color-muted)]"} hover:text-amber-600 transition px-3 py-2`}
     >
       {children}
     </button>
   );
 
   return (
-    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-gray-100">
+    <header className="sticky top-0 z-40 bg-[var(--color-surface)]/90 backdrop-blur border-b border-[var(--color-border)]">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex h-16 items-center justify-between">
           <button onClick={() => setCurrentPage("home")} className="flex items-center text-xl font-bold tracking-wide">
@@ -39,7 +39,7 @@ export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggl
 
           {/* Right actions */}
           <div className="hidden md:flex items-center gap-3">
-            <button className="relative p-2 rounded-full hover:bg-gray-100" title="Cart" type="button" onClick={onCartClick}>
+            <button className="relative p-2 rounded-full hover:bg-[var(--color-surface-muted)]" title="Cart" type="button" onClick={onCartClick}>
               <ShoppingCart className="h-5 w-5" />
               {count > 0 && (
                 <span className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-amber-600 text-white text-xs flex items-center justify-center">
@@ -50,7 +50,7 @@ export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggl
 
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="p-2 rounded-full hover:bg-[var(--color-surface-muted)]"
               title="Toggle Theme"
               type="button"
             >
@@ -60,7 +60,7 @@ export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggl
 
           {/* Mobile cart icon directly visible */}
           <button
-            className="md:hidden relative p-2 rounded-full hover:bg-gray-100"
+            className="md:hidden relative p-2 rounded-full hover:bg-[var(--color-surface-muted)]"
             title="Cart"
             type="button"
             onClick={onCartClick}
@@ -74,7 +74,7 @@ export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggl
           </button>
 
           {/* Mobile menu button */}
-          <button className="md:hidden p-2 rounded-lg hover:bg-gray-100" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle Menu" type="button">
+          <button className="md:hidden p-2 rounded-lg hover:bg-[var(--color-surface-muted)]" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle Menu" type="button">
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
@@ -82,10 +82,10 @@ export default function Navbar({ currentPage, setCurrentPage, onCartClick, toggl
         {/* Mobile nav */}
         {isMenuOpen && (
           <div className="md:hidden pb-3">
-            <div className="flex flex-col gap-1 border-t border-gray-100 pt-3">
-              <button onClick={() => { setCurrentPage("home"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100">Home</button>
-              <button onClick={() => { setCurrentPage("perfumes"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100">Perfumes</button>
-              <button onClick={() => { setCurrentPage("about"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100">About</button>
+            <div className="flex flex-col gap-1 border-t border-[var(--color-border)] pt-3">
+              <button onClick={() => { setCurrentPage("home"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)]">Home</button>
+              <button onClick={() => { setCurrentPage("perfumes"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)]">Perfumes</button>
+              <button onClick={() => { setCurrentPage("about"); setIsMenuOpen(false); }} className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)]">About</button>
             </div>
           </div>
         )}

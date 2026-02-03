@@ -12,7 +12,7 @@ const Button = React.memo(({
   
   const variants = {
     primary: 'bg-amber-600 text-white hover:bg-amber-700 focus:ring-amber-600',
-    secondary: 'border border-gray-200 text-gray-900 hover:bg-gray-50 focus:ring-gray-200',
+    secondary: 'border border-[var(--color-border)] text-[var(--color-text)] hover:bg-[var(--color-surface-muted)] focus:ring-amber-600',
     success: 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-600',
     danger: 'text-red-600 hover:text-red-700',
   };

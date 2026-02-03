@@ -16,7 +16,7 @@ const ProductGrid = React.memo(({
   if (products.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 text-lg">No products found</p>
+        <p className="text-[var(--color-muted)] text-lg">No products found</p>
       </div>
     );
   }

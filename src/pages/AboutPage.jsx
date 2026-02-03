@@ -9,8 +9,8 @@ const FounderCard = React.memo(({ initials, name, role, description }) => (
         {initials}
       </div>
       <h5 className="mt-3 text-lg font-medium">{name}</h5>
-      <p className="text-sm text-gray-600">{role}</p>
-      <p className="mt-2 text-gray-700 text-sm">{description}</p>
+      <p className="text-sm text-[var(--color-muted)]">{role}</p>
+      <p className="mt-2 text-[var(--color-text)] text-sm">{description}</p>
     </div>
   </Card>
 ));
@@ -22,11 +22,11 @@ export default function AboutPage() {
     <section className="mx-auto max-w-5xl px-4 py-12">
       <SectionHeader title="About Sahumärio" />
       
-      <p className="mt-3 text-gray-700 leading-relaxed">
+      <p className="mt-3 text-[var(--color-text)] leading-relaxed">
         Welcome to Sahumärio, where tradition meets luxury. We specialize in crafting
         authentic oil-based perfumes that are designed to last throughout your day and beyond.
       </p>
-      <p className="mt-2 text-gray-700 leading-relaxed">
+      <p className="mt-2 text-[var(--color-text)] leading-relaxed">
         Our perfumes are carefully formulated using the finest natural ingredients, ensuring a
         rich, long-lasting fragrance experience that synthetic alternatives simply cannot match.
       </p>
