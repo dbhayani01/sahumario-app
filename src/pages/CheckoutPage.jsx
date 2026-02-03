@@ -16,31 +16,93 @@ export default function CheckoutPage({ setCurrentPage }) {
     setError(null);
   }, []);
 
-  const sendCartToWhatsApp = useCallback(async () => {
+  const initiatePayment = useCallback(async () => {
     if (!formData.name || !formData.phone || !formData.address || !formData.city || !formData.state || !formData.pin) {
-      setError("Please fill in all required fields before sending the cart to WhatsApp.");
+      setError("Please fill in all required fields before proceeding to payment.");
       return;
     }
 
     try {
       setLoading(true);
-      const phoneNumber = "+919427368910";
-      const cartDetails = items.map(item => `${item.name} x${item.qty}`).join("\n");
-      const addressDetails = `Name: ${formData.name}\nPhone: ${formData.phone}\nAddress: ${formData.address}, ${formData.city}, ${formData.state} - ${formData.pin}`;
-      const notes = formData.notes ? `\nNotes: ${formData.notes}` : "";
-      const message = `Cart Details:\n${cartDetails}\n\n${addressDetails}${notes}\n\nTotal: ${formatINR(subtotal)}`;
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-      
-      window.open(whatsappUrl, "_blank");
-      clearCart();
-      setCurrentPage("perfumes");
+      const razorpayKey = process.env.REACT_APP_RAZORPAY_KEY_ID;
+      if (!razorpayKey) {
+        throw new Error("Razorpay key is not configured.");
+      }
+
+      const orderResponse = await fetch("/api/payments/razorpay/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: Math.round(subtotal * 100),
+          currency: "INR",
+          customer: {
+            name: formData.name,
+            phone: formData.phone,
+            email: formData.email || "",
+          },
+          notes: {
+            address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pin}`,
+            instructions: formData.notes || "",
+          },
+        }),
+      });
+
+      if (!orderResponse.ok) {
+        throw new Error("Unable to create payment order.");
+      }
+
+      const orderData = await orderResponse.json();
+      await loadRazorpayScript();
+
+      const options = {
+        key: razorpayKey,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Sahumario",
+        description: "Perfume order payment",
+        order_id: orderData.id,
+        prefill: {
+          name: formData.name,
+          email: formData.email || "",
+          contact: formData.phone,
+        },
+        notes: {
+          address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pin}`,
+          instructions: formData.notes || "",
+        },
+        theme: {
+          color: "#d97706",
+        },
+        handler: () => {
+          clearCart();
+          setCurrentPage("perfumes");
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
     } catch (err) {
-      setError("Failed to send cart. Please try again.");
+      setError(err?.message || "Failed to start payment. Please try again.");
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }, [formData, items, subtotal, clearCart, setCurrentPage]);
+  }, [formData, subtotal, clearCart, setCurrentPage]);
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve, reject) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => reject(new Error("Failed to load Razorpay SDK."));
+      document.body.appendChild(script);
+    });
+  };
 
   if (items.length === 0) {
     return (
@@ -86,7 +148,7 @@ export default function CheckoutPage({ setCurrentPage }) {
             <CartSummary
               items={items}
               subtotal={subtotal}
-              onCheckout={sendCartToWhatsApp}
+              onCheckout={initiatePayment}
               onContinueShopping={() => setCurrentPage("perfumes")}
               loading={loading}
             />
