@@ -16,9 +16,9 @@ const Hero = React.memo(({ onExplore }) => {
   return (
     <section
       className="relative overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: "url('/hero-bg.png')" }}
+      style={{ backgroundImage: "url('/hero-bg.svg')" }}
     >
-      <div className="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
+      <div className="absolute inset-0 bg-[var(--color-hero-overlay)] backdrop-blur-sm"></div>
 
       <div className="relative mx-auto max-w-6xl px-4 py-20 text-center">
         <h1
@@ -29,7 +29,7 @@ const Hero = React.memo(({ onExplore }) => {
           Authentic <span className="text-amber-600">Oil-Based</span> Perfumes
         </h1>
         <p
-          className={`mt-4 text-gray-700 max-w-2xl mx-auto text-lg transition-opacity duration-1000 delay-200 ${
+          className={`mt-4 text-[var(--color-muted)] max-w-2xl mx-auto text-lg transition-opacity duration-1000 delay-200 ${
             animate ? "opacity-100" : "opacity-0"
           }`}
         >
