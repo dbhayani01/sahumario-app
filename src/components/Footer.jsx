@@ -21,7 +21,7 @@ const Footer = React.memo(({ setCurrentPage }) => {
   }, []);
 
   return (
-    <footer className="mt-12 border-t border-gray-100">
+    <footer className="mt-12 border-t border-[var(--color-border)]">
       <div className="mx-auto max-w-6xl px-4 py-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
         {/* Column 1 */}
         <div>
