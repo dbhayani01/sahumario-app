@@ -21,12 +21,12 @@ const ProductDetailModal = React.memo(({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-xl p-6 mx-4">
+      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[var(--color-surface)] rounded-lg shadow-xl p-6 mx-4 border border-[var(--color-border)] text-[var(--color-text)]">
         <div className="flex justify-between items-start mb-4">
           <h2 className="text-2xl font-bold">{product.name}</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg"
+            className="p-2 hover:bg-[var(--color-surface-muted)] rounded-lg"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -35,7 +35,7 @@ const ProductDetailModal = React.memo(({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {/* Image */}
-          <div className="bg-gray-100 rounded-lg overflow-hidden">
+          <div className="bg-[var(--color-surface-muted)] rounded-lg overflow-hidden">
             <SafeImage
               src={product.image}
               alt={product.alt || product.name}
@@ -45,7 +45,7 @@ const ProductDetailModal = React.memo(({
 
           {/* Details */}
           <div>
-            <p className="text-gray-700 text-lg mb-4">{product.description}</p>
+            <p className="text-[var(--color-muted)] text-lg mb-4">{product.description}</p>
             
             <div className="mb-6">
               <span className="text-3xl font-bold text-amber-600">
@@ -74,7 +74,7 @@ const ProductDetailModal = React.memo(({
                     +
                   </Button>
                 </div>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-[var(--color-muted)]">
                   Subtotal: {formatINR(product.price * quantity)}
                 </p>
               </div>
@@ -90,7 +90,7 @@ const ProductDetailModal = React.memo(({
 
             <button
               onClick={onClose}
-              className="w-full mt-4 py-2 px-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition"
+              className="w-full mt-4 py-2 px-4 border border-[var(--color-border)] rounded-lg hover:bg-[var(--color-surface-muted)] transition"
             >
               Close
             </button>

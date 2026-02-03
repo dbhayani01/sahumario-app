@@ -21,10 +21,10 @@ export default function PerfumeCard({
 
   return (
     <article
-      className="rounded-lg border border-gray-200 shadow-sm overflow-hidden bg-white cursor-pointer"
+      className="rounded-lg border border-[var(--color-border)] shadow-sm overflow-hidden bg-[var(--color-surface)] cursor-pointer"
       onClick={onClick}
     >
-      <div className="relative aspect-[4/5] bg-gray-100">
+      <div className="relative aspect-[4/5] bg-[var(--color-surface-muted)]">
         <SafeImage
           src={image}
           alt={alt || name}
@@ -34,7 +34,7 @@ export default function PerfumeCard({
 
       <div className="p-4">
         <h4 className="font-semibold text-lg line-clamp-1">{name}</h4>
-        <p className="mt-1 text-sm text-gray-600 line-clamp-2 hidden sm:block">
+        <p className="mt-1 text-sm text-[var(--color-muted)] line-clamp-2 hidden sm:block">
           {description}
         </p>
         <div className="mt-3 font-medium hidden sm:block">
@@ -48,7 +48,7 @@ export default function PerfumeCard({
                 e.stopPropagation();
                 onUpdateQty(qty - 1);
               }}
-              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+              className="px-3 py-1 bg-[var(--color-surface-muted)] rounded hover:bg-amber-600 hover:text-white transition-colors"
             >
               -
             </button>
@@ -58,7 +58,7 @@ export default function PerfumeCard({
                 e.stopPropagation();
                 onUpdateQty(qty + 1);
               }}
-              className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+              className="px-3 py-1 bg-[var(--color-surface-muted)] rounded hover:bg-amber-600 hover:text-white transition-colors"
             >
               +
             </button>

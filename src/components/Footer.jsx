@@ -3,7 +3,7 @@ import React, { useCallback } from "react";
 const FooterLink = React.memo(({ onClick, children }) => (
   <button
     onClick={onClick}
-    className="hover:text-gray-900 transition-colors"
+    className="hover:text-amber-600 transition-colors"
   >
     {children}
   </button>
@@ -31,7 +31,7 @@ const Footer = React.memo(({ setCurrentPage }) => {
           >
             <h4 className="text-lg font-semibold">SAHUMäRIO</h4>
           </button>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-[var(--color-muted)]">
             Authentic oil-based perfumes that last all day.
           </p>
         </div>
@@ -39,7 +39,7 @@ const Footer = React.memo(({ setCurrentPage }) => {
         {/* Column 2 */}
         <div>
           <h5 className="font-medium">Quick Links</h5>
-          <ul className="mt-2 space-y-1 text-gray-600">
+          <ul className="mt-2 space-y-1 text-[var(--color-muted)]">
             <li>
               <FooterLink onClick={() => handleNavClick("home")}>
                 Home
@@ -66,11 +66,11 @@ const Footer = React.memo(({ setCurrentPage }) => {
         {/* Column 3 */}
         <div>
           <h5 className="font-medium">Connect</h5>
-          <p className="mt-2 text-gray-600">
-            Email: <a href="mailto:sahumariofragnance@gmail.com" className="hover:text-gray-900 transition-colors">sahumariofragnance@gmail.com</a>
+          <p className="mt-2 text-[var(--color-muted)]">
+            Email: <a href="mailto:sahumariofragnance@gmail.com" className="hover:text-amber-600 transition-colors">sahumariofragnance@gmail.com</a>
           </p>
-          <p className="text-gray-600">Phone: <a href="tel:+919974599911" className="hover:text-gray-900 transition-colors">+91 9974599911</a></p>
-          <p className="mt-4 text-gray-500">© 2025 SAHUMäRIO. All rights reserved.</p>
+          <p className="text-[var(--color-muted)]">Phone: <a href="tel:+919974599911" className="hover:text-amber-600 transition-colors">+91 9974599911</a></p>
+          <p className="mt-4 text-[var(--color-muted)]">© 2025 SAHUMäRIO. All rights reserved.</p>
         </div>
       </div>
     </footer>

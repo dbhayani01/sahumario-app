@@ -11,14 +11,14 @@ const Textarea = React.memo(React.forwardRef(({
   return (
     <div className="w-full">
       {label && (
-        <label className="text-sm text-gray-700">
+        <label className="text-sm text-[var(--color-text)]">
           {label} {required && <span className="text-red-500">*</span>}
         </label>
       )}
       <textarea
         ref={ref}
         rows={rows}
-        className={`mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-amber-600 outline-none transition-colors resize-none ${
+        className={`mt-1 w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text)] px-3 py-2 focus:ring-2 focus:ring-amber-600 outline-none transition-colors resize-none placeholder:text-[var(--color-muted)] ${
           error ? 'border-red-500 focus:ring-red-500' : ''
         } ${className}`}
         {...props}
