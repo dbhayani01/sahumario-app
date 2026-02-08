@@ -97,6 +97,43 @@ src/
 
 ---
 
+## Security
+
+### Admin Page Access
+
+The admin panel is **not protected by authentication** in the current implementation. Access is controlled by two passive gates:
+
+| Gate | How it works |
+|---|---|
+| **Link hidden by default** | The "Admin" link in the Footer only renders when `REACT_APP_ADMIN_ENABLED=true` is set in the environment. Without it the page is unreachable via the UI. |
+| **GitHub PAT required to publish** | "Commit to GitHub" requires `REACT_APP_GITHUB_TOKEN` in `.env`. Without it the commit fails gracefully — no products can be published. |
+
+**What is NOT in place yet:**
+
+- `src/context/AuthContext.jsx` implements token-based login/signup/logout (calls `/auth/login` and `/auth/signup`) but is **never imported in `App.js` and not wired to any route guard**.
+- There is no password prompt, session check, or role-based guard before rendering `<AdminPage />`.
+
+> **Recommendation before production deploy:** Add a route guard in `App.js` that checks `useAuth().token` and redirects unauthenticated visitors to `<LoginPage />` before rendering the admin case.
+
+---
+
+### Payment Security
+
+There is **no custom OTP** in this codebase. The payment security stack is:
+
+| Layer | What it does |
+|---|---|
+| **HTTPS (Vercel)** | All traffic is TLS-encrypted in transit. |
+| **Server-side secret** | `RAZORPAY_KEY_SECRET` lives only in Vercel environment variables — it never reaches the browser bundle. |
+| **HMAC-SHA256 signature verification** | `api/payments/razorpay/verify.js` recomputes `HMAC-SHA256(key_secret, order_id \| payment_id)` and rejects any response whose signature doesn't match, preventing tampered payment confirmations. |
+| **Razorpay-managed OTPs** | For UPI, net-banking, and many card issuers, Razorpay's checkout modal handles OTP/2FA challenges internally — enforced by the payment network, not our code. |
+
+**Known limitation — amount is client-submitted:**
+
+The cart `subtotal` is calculated on the frontend and sent to `POST /api/payments/razorpay/order`. A malicious user could theoretically manipulate the amount before the API call. A hardened implementation would re-derive the total on the server from the product catalogue and submitted item IDs.
+
+---
+
 ## Architecture
 
 ### Routing
