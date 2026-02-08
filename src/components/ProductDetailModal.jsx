@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 import SafeImage from './SafeImage';
 import { Button } from './ui';
@@ -11,6 +11,15 @@ const ProductDetailModal = React.memo(({
   onAdd, 
   onUpdateQty 
 }) => {
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose?.();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!product) return null;
 
   const handleQtyChange = (newQty) => {
@@ -20,10 +29,15 @@ const ProductDetailModal = React.memo(({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-product-name"
+    >
       <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[var(--color-surface)] rounded-lg shadow-xl p-6 mx-4 border border-[var(--color-border)] text-[var(--color-text)]">
         <div className="flex justify-between items-start mb-4">
-          <h2 className="text-2xl font-bold">{product.name}</h2>
+          <h2 id="modal-product-name" className="text-2xl font-bold">{product.name}</h2>
           <button
             onClick={onClose}
             className="p-2 hover:bg-[var(--color-surface-muted)] rounded-lg"

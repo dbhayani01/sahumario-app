@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 
-const OrdersContext = createContext();
+const OrdersContext = createContext(null);
 const ORDERS_KEY = "sahumario_orders";
 
 export function OrdersProvider({ children }) {
@@ -13,14 +13,19 @@ export function OrdersProvider({ children }) {
     }
   });
 
+  // Persist orders to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+    try {
+      localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+    } catch {
+      // Silently ignore write errors (e.g. private browsing storage limit)
+    }
   }, [orders]);
 
-  // orderData: { id, items, subtotal, total, address, payment, createdAt }
-  const addOrder = (orderData) => {
-    setOrders((prev) => [orderData, ...prev]); // newest first
-  };
+  // orderData shape: { id, items, subtotal, total, address, payment, createdAt }
+  const addOrder = useCallback((orderData) => {
+    setOrders((prev) => [orderData, ...prev]); // newest-first order
+  }, []);
 
   return (
     <OrdersContext.Provider value={{ orders, addOrder }}>
@@ -30,5 +35,7 @@ export function OrdersProvider({ children }) {
 }
 
 export function useOrders() {
-  return useContext(OrdersContext);
+  const ctx = useContext(OrdersContext);
+  if (!ctx) throw new Error("useOrders must be used inside <OrdersProvider>");
+  return ctx;
 }

@@ -60,6 +60,14 @@ const Footer = React.memo(({ setCurrentPage }) => {
                 Contact
               </FooterLink>
             </li>
+            {/* Admin link — only visible when REACT_APP_ADMIN_ENABLED=true in .env */}
+            {process.env.REACT_APP_ADMIN_ENABLED === "true" && (
+              <li>
+                <FooterLink onClick={() => handleNavClick("admin")}>
+                  Admin
+                </FooterLink>
+              </li>
+            )}
           </ul>
         </div>
 

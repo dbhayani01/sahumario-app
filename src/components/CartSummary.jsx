@@ -1,55 +1,107 @@
-import React from 'react';
-import { Button } from './ui';
-import { formatINR } from '../utils/money';
+import React from "react";
+import { Lock, ShieldCheck, Loader2, Sparkles, FlaskConical } from "lucide-react";
+import { formatINR } from "../utils/money";
 
-const CartSummary = React.memo(({ items, subtotal, onCheckout, onContinueShopping, loading = false }) => {
-  const total = subtotal;
+const CartSummary = React.memo(
+  ({
+    items,
+    subtotal,
+    formValid = false,
+    testMode = false,
+    onCheckout,
+    onContinueShopping,
+    loading = false,
+  }) => {
+    return (
+      <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+        <h3 className="mb-4 text-lg font-semibold">Order Summary</h3>
 
-  return (
-    <div className="space-y-4">
-      <h3 className="font-medium text-lg">Order Summary</h3>
-      
-      <div className="space-y-2 max-h-64 overflow-y-auto">
-        {items.map((item) => (
-          <div key={item.product_id} className="flex justify-between text-sm">
-            <span className="text-[var(--color-muted)]">{item.name} x{item.qty}</span>
-            <span className="font-medium">{formatINR(item.price * item.qty)}</span>
+        {/* Item list with icon placeholder */}
+        <ul className="scrollbar-hide max-h-64 space-y-3 overflow-y-auto">
+          {items.map((item) => (
+            <li key={item.product_id} className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-3">
+                {/* Amber accent placeholder — replaces missing thumbnails */}
+                <div
+                  className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600"
+                  aria-hidden="true"
+                >
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium">{item.name}</p>
+                  <p className="text-xs text-[var(--color-muted)]">Qty {item.qty}</p>
+                </div>
+              </div>
+              <span className="shrink-0 text-sm font-semibold">
+                {formatINR(item.price * item.qty)}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        {/* Totals breakdown */}
+        <div className="mt-4 space-y-2 border-t border-[var(--color-border)] pt-4">
+          <div className="flex justify-between text-sm">
+            <span className="text-[var(--color-muted)]">Subtotal</span>
+            <span>{formatINR(subtotal)}</span>
           </div>
-        ))}
-      </div>
-
-      <div className="border-t border-[var(--color-border)] pt-3 space-y-2">
-        <div className="flex justify-between text-sm">
-          <span className="text-[var(--color-muted)]">Subtotal</span>
-          <span className="font-medium">{formatINR(subtotal)}</span>
+          <div className="flex justify-between text-sm">
+            <span className="text-[var(--color-muted)]">Shipping</span>
+            <span className="font-medium text-green-600">Free</span>
+          </div>
+          <div className="flex justify-between border-t border-[var(--color-border)] pt-2 text-base font-semibold">
+            <span>Total</span>
+            <span className="text-amber-600">{formatINR(subtotal)}</span>
+          </div>
         </div>
-        <div className="flex justify-between text-base border-t border-[var(--color-border)] pt-2">
-          <span className="font-semibold">Total</span>
-          <span className="font-semibold">{formatINR(total)}</span>
-        </div>
-      </div>
 
-      <div className="flex flex-col gap-2 pt-4">
-        <Button
+        {/* Primary CTA — disabled until form is valid */}
+        <button
           onClick={onCheckout}
-          disabled={items.length === 0 || loading}
-          variant="success"
-          className="w-full"
+          disabled={!formValid || loading}
+          className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-amber-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2"
+          aria-label={`Pay ${formatINR(subtotal)} securely`}
         >
-          {loading ? 'Processing...' : 'Pay Now'}
-        </Button>
-        <Button
+          {loading ? (
+            <>
+              <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" />
+              Processing…
+            </>
+          ) : (
+            <>
+              <Lock className="h-4 w-4" aria-hidden="true" />
+              Pay {formatINR(subtotal)}
+            </>
+          )}
+        </button>
+
+        {/* Test mode badge — visible only when using a test/sandbox key */}
+        {testMode && (
+          <div className="mt-3 flex items-center justify-center gap-1.5 rounded-lg border border-amber-200 bg-amber-50 py-1.5 text-xs font-medium text-amber-700">
+            <FlaskConical className="h-3.5 w-3.5" aria-hidden="true" />
+            Test mode — no real charges
+          </div>
+        )}
+
+        {/* Trust indicator */}
+        <div className="mt-3 flex items-center justify-center gap-1.5 text-xs text-[var(--color-muted)]">
+          <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+          Secured &amp; encrypted payment
+        </div>
+
+        {/* Secondary action */}
+        <button
           onClick={onContinueShopping}
-          variant="secondary"
-          className="w-full"
+          className="mt-3 w-full py-2 text-sm text-[var(--color-muted)] transition-colors hover:text-amber-600"
         >
           Continue Shopping
-        </Button>
+        </button>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
-CartSummary.displayName = 'CartSummary';
+CartSummary.displayName = "CartSummary";
 
 export default CartSummary;

@@ -50,12 +50,14 @@ const ShippingForm = React.memo(({ onFormChange, initialValues = {} }) => {
       const newForm = { ...prev, [name]: value };
       const newErrors = validateField(name, value);
       setErrors(newErrors);
-      onFormChange(newForm);
+      // Pass validity as second arg so parent can enable/disable the pay button
+      const valid =
+        !Object.keys(newErrors).length &&
+        !!(newForm.name && newForm.phone && newForm.address && newForm.city && newForm.state && newForm.pin);
+      onFormChange(newForm, valid);
       return newForm;
     });
   }, [onFormChange, validateField]);
-
-  const isValid = !Object.keys(errors).length && form.name && form.phone && form.address && form.city && form.state && form.pin;
 
   return (
     <form className="space-y-4">
@@ -136,7 +138,6 @@ const ShippingForm = React.memo(({ onFormChange, initialValues = {} }) => {
         rows={2}
       />
 
-      <input type="hidden" name="isValid" value={isValid} />
     </form>
   );
 });

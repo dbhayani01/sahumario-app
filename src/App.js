@@ -6,6 +6,7 @@ import PerfumesPage from "./pages/PerfumesPage";
 import AboutPage from "./pages/AboutPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrdersPage from "./pages/OrdersPage";
+import AdminPage from "./pages/AdminPage";
 import CartDrawer from "./components/CartDrawer";
 
 export default function App() {
@@ -44,6 +45,8 @@ export default function App() {
         return <CheckoutPage setCurrentPage={handleSetCurrentPage} />;
       case "orders":
         return <OrdersPage />;
+      case "admin":
+        return <AdminPage />;
       default:
         return <PerfumesPage />;
     }

@@ -17,6 +17,7 @@ const Hero = React.memo(({ onExplore }) => {
     <section
       className="relative overflow-hidden bg-cover bg-center"
       style={{ backgroundImage: "url('/hero-bg.svg')" }}
+      aria-label="Hero banner"
     >
       <div className="absolute inset-0 bg-[var(--color-hero-overlay)] backdrop-blur-sm"></div>
 

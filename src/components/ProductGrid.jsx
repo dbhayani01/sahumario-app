@@ -1,18 +1,13 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PerfumeCardOptimized from './PerfumeCardOptimized';
 
-const ProductGrid = React.memo(({ 
-  products = [], 
-  selectedProductId, 
-  onSelectProduct, 
-  onAddToCart, 
+const ProductGrid = React.memo(({
+  products = [],
+  selectedProductId,
+  onSelectProduct,
+  onAddToCart,
   onUpdateQty,
-  columns = { default: 2, sm: 3, lg: 4 }
 }) => {
-  const gridColsClass = useMemo(() => {
-    return `grid-cols-${columns.default} sm:grid-cols-${columns.sm} lg:grid-cols-${columns.lg}`;
-  }, [columns]);
-
   if (products.length === 0) {
     return (
       <div className="text-center py-12">
@@ -21,8 +16,9 @@ const ProductGrid = React.memo(({
     );
   }
 
+  // Static classes so Tailwind can detect and include them in the production build
   return (
-    <div className={`grid gap-4 ${gridColsClass}`}>
+    <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
       {products.map((product) => (
         <PerfumeCardOptimized
           key={product.id}

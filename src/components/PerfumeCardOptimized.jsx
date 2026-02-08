@@ -17,8 +17,10 @@ const PerfumeCardOptimized = React.memo(({
       onClick={onClickCard}
       role="button"
       tabIndex={0}
+      aria-label={`View details for ${name}`}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
           onClickCard();
         }
       }}
@@ -33,16 +35,16 @@ const PerfumeCardOptimized = React.memo(({
 
       <div className="p-4">
         <h4 className="font-semibold text-lg line-clamp-1">{name}</h4>
-        <p className="mt-1 text-sm text-[var(--color-muted)] line-clamp-2 hidden sm:block">
+        <p className="mt-1 text-sm text-[var(--color-muted)] line-clamp-2">
           {description}
         </p>
         
-        <div className="mt-3 font-medium hidden sm:block">
+        <div className="mt-3 font-medium">
           {formatINR(price)}
         </div>
 
         {quantity > 0 && (
-          <div className="mt-4 flex items-center space-x-2 hidden sm:flex">
+          <div className="mt-4 flex items-center space-x-2">
             <button
               onClick={(e) => {
                 e.stopPropagation();
