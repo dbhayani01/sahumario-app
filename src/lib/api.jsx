@@ -1,4 +1,5 @@
-const BASE_URL = ("http://152.67.26.114:8000").replace(/\/+$/, "");
+// Use REACT_APP_API_URL env var in production; falls back to the dev server IP
+const BASE_URL = (process.env.REACT_APP_API_URL || "http://152.67.26.114:8000").replace(/\/+$/, "");
 const TOKEN_KEY = "sahu_token";
 
 function buildUrl(path) {

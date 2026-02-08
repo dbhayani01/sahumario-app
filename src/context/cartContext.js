@@ -7,80 +7,75 @@ import React, {
   useEffect,
 } from "react";
 
-const CartCtx = createContext();
+const CartCtx = createContext(null);
 const CART_STORAGE_KEY = "sahumario_cart";
+
 export function CartProvider({ children }) {
+  // Initialise from localStorage on first render
   const [items, setItems] = useState(() => {
     try {
-      const storedItems = localStorage.getItem(CART_STORAGE_KEY);
-      return storedItems ? JSON.parse(storedItems) : [];
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
     }
   });
 
+  // Persist cart to localStorage whenever it changes
   useEffect(() => {
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     } catch {
-      // Ignore write errors in restricted environments.
+      // Silently ignore write errors (e.g. private browsing storage limit)
     }
   }, [items]);
 
-  const addToCart = (product) => {
-    if (!product.id || !product.price) {
-      alert("Invalid product");
+  const addToCart = useCallback((product) => {
+    if (!product?.id || !product?.price) {
+      console.warn("CartContext: addToCart called with invalid product", product);
       return;
     }
-    const newItem = {
-      product_id: product.id,
-      name: product.name,
-      price: product.price,
-      qty: 1,
-    };
-    setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.product_id === product.id);
-      if (existingItem) {
-        return prevItems.map((item) =>
+    setItems((prev) => {
+      const existing = prev.find((item) => item.product_id === product.id);
+      if (existing) {
+        // Increment quantity if already in cart
+        return prev.map((item) =>
           item.product_id === product.id ? { ...item, qty: item.qty + 1 } : item
         );
       }
-      return [...prevItems, newItem];
+      return [...prev, { product_id: product.id, name: product.name, price: product.price, qty: 1 }];
     });
-  };
+  }, []);
 
   const updateQty = useCallback((itemId, qty) => {
-    setItems((prevItems) => {
-      if (qty === 0) {
-        return prevItems.filter((item) => item.product_id !== itemId);
-      }
-      return prevItems.map((item) =>
-        item.product_id === itemId ? { ...item, qty } : item
-      );
+    setItems((prev) => {
+      // Removing item when qty reaches 0
+      if (qty <= 0) return prev.filter((item) => item.product_id !== itemId);
+      return prev.map((item) => (item.product_id === itemId ? { ...item, qty } : item));
     });
   }, []);
 
   const removeItem = useCallback((itemId) => {
-    setItems((prevItems) => prevItems.filter((item) => item.product_id !== itemId));
+    setItems((prev) => prev.filter((item) => item.product_id !== itemId));
   }, []);
 
   const clearCart = useCallback(() => {
     setItems([]);
   }, []);
 
-  const count = useMemo(() => items.reduce((s, p) => s + p.qty, 0), [items]);
-  const subtotal = useMemo(() => items.reduce((s, p) => s + p.qty * p.price, 0), [items]);
-  const TAX_RATE = 0.1; // Example tax rate
-  const tax = useMemo(() => Math.round(subtotal * TAX_RATE), [subtotal]);
-  const total = useMemo(() => subtotal + tax, [subtotal, tax]);
+  // Derived totals — no tax applied; add tax logic here if required
+  const count = useMemo(() => items.reduce((sum, item) => sum + item.qty, 0), [items]);
+  const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.qty * item.price, 0), [items]);
 
   return (
-    <CartCtx.Provider value={{ items, addToCart, updateQty, removeItem, clearCart, count, subtotal, tax, total }}>
+    <CartCtx.Provider value={{ items, addToCart, updateQty, removeItem, clearCart, count, subtotal }}>
       {children}
     </CartCtx.Provider>
   );
 }
 
 export function useCart() {
-  return useContext(CartCtx);
+  const ctx = useContext(CartCtx);
+  if (!ctx) throw new Error("useCart must be used inside <CartProvider>");
+  return ctx;
 }

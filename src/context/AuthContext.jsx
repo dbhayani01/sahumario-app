@@ -1,48 +1,62 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { api } from "../lib/api";
+import { supabase } from "../lib/supabase";
 
-const AuthCtx = createContext();
+const AuthCtx = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(localStorage.getItem("sahu_token") || "");
-  const [user, setUser] = useState(() => {
-    const raw = localStorage.getItem("sahu_user");
-    return raw ? JSON.parse(raw) : null;
-  });
+  const [user, setUser] = useState(null);
+  // true while restoring session from localStorage — prevents login-form flash
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) localStorage.setItem("sahu_token", token);
-    else localStorage.removeItem("sahu_token");
-  }, [token]);
+    // Restore existing session synchronously from localStorage
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
 
-  useEffect(() => {
-    if (user) localStorage.setItem("sahu_user", JSON.stringify(user));
-    else localStorage.removeItem("sahu_user");
-  }, [user]);
+    // Keep user in sync across login, logout, and automatic token refresh
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
 
-  const signup = async ({ name, email, password }) => {
-    const res = await api("/auth/signup", { method: "POST", body: { name, email, password } });
-    setToken(res.access_token);
-    setUser(res.user);
-    return res.user;
-  };
+    return () => subscription.unsubscribe();
+  }, []);
 
   const login = async ({ email, password }) => {
-    const res = await api("/auth/login", { method: "POST", body: { email, password } });
-    setToken(res.access_token);
-    setUser(res.user);
-    return res.user;
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw new Error(error.message);
+    return data.user;
   };
 
-  const logout = () => {
-    setToken("");
-    setUser(null);
+  const signup = async ({ name, email, password }) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name } }, // stored in user_metadata
+    });
+    if (error) throw new Error(error.message);
+    return data.user;
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
   };
 
   return (
-    <AuthCtx.Provider value={{ token, user, login, signup, logout, setUser }}>
+    <AuthCtx.Provider value={{ user, loading, login, signup, logout }}>
       {children}
     </AuthCtx.Provider>
   );
 }
-export function useAuth() { return useContext(AuthCtx); }
+
+export function useAuth() {
+  const ctx = useContext(AuthCtx);
+  if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
+  return ctx;
+}

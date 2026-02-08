@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { X, Trash2, Minus, Plus } from "lucide-react";
 import { useCart } from "../context/cartContext";
 import { formatINR } from "../utils/money";
@@ -53,12 +53,21 @@ CartItem.displayName = 'CartItem';
 
 const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
   const { items, updateQty, removeItem, clearCart, subtotal } = useCart();
-  const total = subtotal;
 
   const handleClearCart = useCallback(() => {
     clearCart();
     onClose?.();
   }, [clearCart, onClose]);
+
+  // Close cart on Escape key
+  useEffect(() => {
+    if (!open) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose?.();
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [open, onClose]);
 
   const handleUpdateQty = useCallback((itemId, newQty) => {
     updateQty(itemId, newQty);
@@ -81,7 +90,7 @@ const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
 
       {/* Panel */}
       <aside
-        className={`absolute right-0 top-0 h-full w-full max-w-md bg-[var(--color-surface)] shadow-xl transition-transform sm:w-3/4 xs:w-full ${
+        className={`absolute right-0 top-0 h-full w-full max-w-sm sm:max-w-md bg-[var(--color-surface)] shadow-xl transition-transform ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
         role="dialog"
@@ -127,7 +136,7 @@ const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
             </div>
             <div className="flex justify-between text-base pt-2 border-t border-[var(--color-border)] mt-2">
               <span className="font-semibold">Total</span>
-              <span className="font-semibold">{formatINR(total)}</span>
+              <span className="font-semibold">{formatINR(subtotal)}</span>
             </div>
           </div>
 

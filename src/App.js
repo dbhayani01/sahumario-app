@@ -6,9 +6,13 @@ import PerfumesPage from "./pages/PerfumesPage";
 import AboutPage from "./pages/AboutPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrdersPage from "./pages/OrdersPage";
+import AdminPage from "./pages/AdminPage";
+import LoginPage from "./pages/LoginPage";
 import CartDrawer from "./components/CartDrawer";
+import { useAuth } from "./context/AuthContext";
 
 export default function App() {
+  const { user, loading: authLoading } = useAuth();
   const [currentPage, setCurrentPage] = useState("home");
   const [showCart, setShowCart] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,6 +48,23 @@ export default function App() {
         return <CheckoutPage setCurrentPage={handleSetCurrentPage} />;
       case "orders":
         return <OrdersPage />;
+      case "admin":
+        if (authLoading) {
+          return (
+            <div className="flex justify-center py-24">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-600 border-t-transparent" />
+            </div>
+          );
+        }
+        if (!user) {
+          return (
+            <LoginPage
+              setCurrentPage={handleSetCurrentPage}
+              redirectAfterLogin="admin"
+            />
+          );
+        }
+        return <AdminPage setCurrentPage={handleSetCurrentPage} />;
       default:
         return <PerfumesPage />;
     }

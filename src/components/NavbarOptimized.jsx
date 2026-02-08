@@ -9,6 +9,7 @@ const NavLink = React.memo(({ id, isActive, onClick, children }) => (
     className={`${
       isActive ? 'text-amber-600' : 'text-[var(--color-muted)]'
     } hover:text-amber-600 transition px-3 py-2`}
+    aria-current={isActive ? 'page' : undefined}
   >
     {children}
   </button>
@@ -92,10 +93,12 @@ const NavbarOptimized = React.memo(({
           </div>
 
           {/* Mobile menu button */}
-          <button 
-            className="md:hidden p-2 rounded-lg hover:bg-[var(--color-surface-muted)] transition" 
-            onClick={() => setIsMenuOpen?.(!isMenuOpen)} 
-            aria-label="Toggle Menu" 
+          <button
+            className="md:hidden p-2 rounded-lg hover:bg-[var(--color-surface-muted)] transition"
+            onClick={() => setIsMenuOpen?.(!isMenuOpen)}
+            aria-label="Toggle Menu"
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-nav"
             type="button"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -104,7 +107,7 @@ const NavbarOptimized = React.memo(({
 
         {/* Mobile nav */}
         {isMenuOpen && (
-          <div className="md:hidden pb-3 animate-in fade-in duration-200">
+          <nav id="mobile-nav" className="md:hidden pb-3 animate-in fade-in duration-200">
             <div className="flex flex-col gap-1 border-t border-[var(--color-border)] pt-3">
               <button 
                 onClick={() => handleNavClick('home')} 
@@ -125,7 +128,7 @@ const NavbarOptimized = React.memo(({
                 About
               </button>
             </div>
-          </div>
+          </nav>
         )}
       </div>
     </header>

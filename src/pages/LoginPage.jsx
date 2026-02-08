@@ -1,17 +1,22 @@
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
-export default function LoginPage({ setCurrentPage, setIsLoggedIn }) {
-  const { login, signup } = useAuth(); // ✅ hook used inside component
+export default function LoginPage({
+  setCurrentPage,
+  redirectAfterLogin = "home",
+}) {
+  const { login, signup } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
+    setError(null);
     try {
       if (isLogin) {
         await login({ email: formData.email.trim(), password: formData.password });
@@ -22,13 +27,9 @@ export default function LoginPage({ setCurrentPage, setIsLoggedIn }) {
           password: formData.password,
         });
       }
-      // keep your existing Navbar logic that depends on isLoggedIn
-      setIsLoggedIn?.(true);
-      setCurrentPage?.("home");
+      setCurrentPage?.(redirectAfterLogin);
     } catch (err) {
-      const msg = (err && err.message) || "Authentication failed";
-      alert(msg);
-      console.error(err);
+      setError((err && err.message) || "Authentication failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -39,6 +40,16 @@ export default function LoginPage({ setCurrentPage, setIsLoggedIn }) {
       <h3 className="text-2xl md:text-3xl font-semibold text-center">
         {isLogin ? "Welcome Back" : "Create Account"}
       </h3>
+
+      {error && (
+        <div
+          role="alert"
+          className="mt-6 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700"
+        >
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+          <p className="text-sm">{error}</p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         {!isLogin && (
@@ -89,15 +100,15 @@ export default function LoginPage({ setCurrentPage, setIsLoggedIn }) {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-lg bg-amber-600 text-white py-2.5 hover:bg-amber-700 disabled:opacity-60"
+          className="w-full rounded-lg bg-amber-600 text-white py-2.5 hover:bg-amber-700 active:scale-95 transition-colors disabled:opacity-60"
         >
-          {loading ? (isLogin ? "Logging in..." : "Signing up...") : isLogin ? "Login" : "Sign Up"}
+          {loading ? (isLogin ? "Logging in…" : "Signing up…") : isLogin ? "Login" : "Sign Up"}
         </button>
 
         <div className="text-center">
           <button
             type="button"
-            onClick={() => setIsLogin((v) => !v)}
+            onClick={() => { setIsLogin((v) => !v); setError(null); }}
             className="text-amber-600 hover:text-orange-600 font-medium"
           >
             {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
