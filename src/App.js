@@ -8,6 +8,10 @@ import CheckoutPage from "./pages/CheckoutPage";
 import OrdersPage from "./pages/OrdersPage";
 import AdminPage from "./pages/AdminPage";
 import LoginPage from "./pages/LoginPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
+import RefundPolicyPage from "./pages/RefundPolicyPage";
+import ShippingPolicyPage from "./pages/ShippingPolicyPage";
+import TermsPage from "./pages/TermsPage";
 import CartDrawer from "./components/CartDrawer";
 import { useAuth } from "./context/AuthContext";
 
@@ -65,6 +69,14 @@ export default function App() {
           );
         }
         return <AdminPage setCurrentPage={handleSetCurrentPage} />;
+      case "privacy-policy":
+        return <PrivacyPolicyPage />;
+      case "refund-policy":
+        return <RefundPolicyPage />;
+      case "shipping-policy":
+        return <ShippingPolicyPage />;
+      case "terms":
+        return <TermsPage />;
       default:
         return <PerfumesPage />;
     }
