@@ -6,6 +6,7 @@ import PerfumesPage from "./pages/PerfumesPage";
 import AboutPage from "./pages/AboutPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrdersPage from "./pages/OrdersPage";
+import AdminPage from "./pages/AdminPage";
 import CartDrawer from "./components/CartDrawer";
 
 export default function App() {
@@ -44,6 +45,8 @@ export default function App() {
         return <CheckoutPage setCurrentPage={handleSetCurrentPage} />;
       case "orders":
         return <OrdersPage />;
+      case "admin":
+        return <AdminPage />;
       default:
         return <PerfumesPage />;
     }
@@ -51,6 +54,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)] transition-colors duration-200">
+      {/* Skip to main content link for keyboard navigation */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-amber-600 focus:text-white focus:rounded-lg focus:shadow-lg"
+      >
+        Skip to main content
+      </a>
+
       <NavbarOptimized
         currentPage={currentPage}
         setCurrentPage={handleSetCurrentPage}
@@ -59,7 +70,7 @@ export default function App() {
         setIsMenuOpen={setIsMenuOpen}
       />
 
-      <main className="flex-1">
+      <main id="main-content" className="flex-1" role="main" aria-label="Main content">
         {renderPage()}
       </main>
 

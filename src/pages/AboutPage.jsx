@@ -19,20 +19,20 @@ FounderCard.displayName = 'FounderCard';
 
 export default function AboutPage() {
   return (
-    <section className="mx-auto max-w-5xl px-4 py-12">
+    <section className="mx-auto max-w-5xl px-4 py-8 sm:py-12">
       <SectionHeader title="About Sahumärio" />
-      
-      <p className="mt-3 text-[var(--color-text)] leading-relaxed">
+
+      <p className="mt-3 text-[var(--color-text)] leading-relaxed text-base sm:text-lg">
         Welcome to Sahumärio, where tradition meets luxury. We specialize in crafting
         authentic oil-based perfumes that are designed to last throughout your day and beyond.
       </p>
-      <p className="mt-2 text-[var(--color-text)] leading-relaxed">
+      <p className="mt-3 text-[var(--color-text)] leading-relaxed text-base sm:text-lg">
         Our perfumes are carefully formulated using the finest natural ingredients, ensuring a
         rich, long-lasting fragrance experience that synthetic alternatives simply cannot match.
       </p>
 
-      <h4 className="mt-8 text-xl font-semibold">Our Founders</h4>
-      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <h4 className="mt-8 sm:mt-10 text-xl sm:text-2xl font-semibold">Our Founders</h4>
+      <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <FounderCard
           initials="HM"
           name="Harsh Maradiya"

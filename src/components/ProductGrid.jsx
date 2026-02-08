@@ -22,7 +22,7 @@ const ProductGrid = React.memo(({
   }
 
   return (
-    <div className={`grid gap-4 ${gridColsClass}`}>
+    <div className={`grid gap-3 sm:gap-4 ${gridColsClass}`}>
       {products.map((product) => (
         <PerfumeCardOptimized
           key={product.id}

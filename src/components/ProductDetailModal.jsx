@@ -20,20 +20,26 @@ const ProductDetailModal = React.memo(({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[var(--color-surface)] rounded-lg shadow-xl p-6 mx-4 border border-[var(--color-border)] text-[var(--color-text)]">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[var(--color-surface)] rounded-lg shadow-xl p-4 sm:p-6 border border-[var(--color-border)] text-[var(--color-text)]"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-between items-start mb-4">
-          <h2 className="text-2xl font-bold">{product.name}</h2>
+          <h2 className="text-xl sm:text-2xl font-bold pr-2">{product.name}</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-[var(--color-surface-muted)] rounded-lg"
-            aria-label="Close"
+            className="p-2 hover:bg-[var(--color-surface-muted)] rounded-lg flex-shrink-0"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {/* Image */}
           <div className="bg-[var(--color-surface-muted)] rounded-lg overflow-hidden">
             <SafeImage
@@ -45,10 +51,10 @@ const ProductDetailModal = React.memo(({
 
           {/* Details */}
           <div>
-            <p className="text-[var(--color-muted)] text-lg mb-4">{product.description}</p>
-            
-            <div className="mb-6">
-              <span className="text-3xl font-bold text-amber-600">
+            <p className="text-[var(--color-muted)] text-base sm:text-lg mb-4">{product.description}</p>
+
+            <div className="mb-4 sm:mb-6">
+              <span className="text-2xl sm:text-3xl font-bold text-amber-600">
                 ₹{Number(product.price).toLocaleString('en-IN')}
               </span>
             </div>

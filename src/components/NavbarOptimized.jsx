@@ -61,6 +61,9 @@ const NavbarOptimized = React.memo(({
             <NavLink id="about" isActive={currentPage === 'about'} onClick={handleNavClick}>
               About
             </NavLink>
+            <NavLink id="admin" isActive={currentPage === 'admin'} onClick={handleNavClick}>
+              Admin
+            </NavLink>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -106,23 +109,29 @@ const NavbarOptimized = React.memo(({
         {isMenuOpen && (
           <div className="md:hidden pb-3 animate-in fade-in duration-200">
             <div className="flex flex-col gap-1 border-t border-[var(--color-border)] pt-3">
-              <button 
-                onClick={() => handleNavClick('home')} 
+              <button
+                onClick={() => handleNavClick('home')}
                 className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)] transition"
               >
                 Home
               </button>
-              <button 
-                onClick={() => handleNavClick('perfumes')} 
+              <button
+                onClick={() => handleNavClick('perfumes')}
                 className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)] transition"
               >
                 Perfumes
               </button>
-              <button 
-                onClick={() => handleNavClick('about')} 
+              <button
+                onClick={() => handleNavClick('about')}
                 className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)] transition"
               >
                 About
+              </button>
+              <button
+                onClick={() => handleNavClick('admin')}
+                className="block w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-muted)] transition"
+              >
+                Admin
               </button>
             </div>
           </div>

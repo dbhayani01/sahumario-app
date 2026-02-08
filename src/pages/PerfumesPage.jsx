@@ -54,8 +54,8 @@ export default function PerfumesPage() {
   }, [updateQty]);
 
   return (
-    <section className="mx-auto max-w-6xl px-4 py-12">
-      <SectionHeader 
+    <section className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
+      <SectionHeader
         title="Our Collection"
         subtitle="Discover our range of authentic oil-based perfumes."
       />
@@ -70,7 +70,7 @@ export default function PerfumesPage() {
         />
       )}
 
-      <div className="mt-8">
+      <div className="mt-6 sm:mt-8">
         <ProductGrid
           products={products}
           selectedProductId={selectedProductId}

@@ -5,7 +5,7 @@
     "description": "Warm, resinous amber with smoky oud base.",
     "price": 749,
     "image": "/products/bloom.jpg",
-    "alt": "Bottle of Amber Oud perfume"
+    "alt": "Bloom perfume bottle with warm amber and oud fragrance"
   },
   {
     "id": 2,
@@ -13,30 +13,30 @@
     "description": "Clean, soft musk with subtle floral notes.",
     "price": 749,
     "image": "/products/dew_drop.jpg",
-    "alt": "Bottle of White Musk perfume"
+    "alt": "Dew Drop perfume bottle with white musk and floral fragrance"
   },
   {
     "id": 3,
     "name": "Lemon Breeze",
-    "description": "Clean, soft musk with subtle floral notes.",
+    "description": "Fresh citrus scent with light, airy notes.",
     "price": 749,
     "image": "/products/lemon_breeze.jpg",
-    "alt": "Bottle of White Musk perfume"
+    "alt": "Lemon Breeze perfume bottle with fresh citrus fragrance"
   },
   {
     "id": 4,
     "name": "Morning Dew",
-    "description": "Clean, soft musk with subtle floral notes.",
+    "description": "Refreshing aquatic blend with green undertones.",
     "price": 749,
     "image": "/products/morning_dew.jpg",
-    "alt": "Bottle of White Musk perfume"
+    "alt": "Morning Dew perfume bottle with aquatic and green fragrance"
   },
   {
     "id": 5,
     "name": "Night Queen",
-    "description": "Clean, soft musk with subtle floral notes.",
+    "description": "Rich, exotic floral with deep woody finish.",
     "price": 749,
     "image": "/products/night_queen.jpg",
-    "alt": "Bottle of White Musk perfume"
+    "alt": "Night Queen perfume bottle with exotic floral and woody fragrance"
   }
 ]

@@ -37,7 +37,7 @@ const Footer = React.memo(({ setCurrentPage }) => {
         </div>
 
         {/* Column 2 */}
-        <div>
+        <nav aria-label="Footer navigation">
           <h5 className="font-medium">Quick Links</h5>
           <ul className="mt-2 space-y-1 text-[var(--color-muted)]">
             <li>
@@ -61,7 +61,7 @@ const Footer = React.memo(({ setCurrentPage }) => {
               </FooterLink>
             </li>
           </ul>
-        </div>
+        </nav>
 
         {/* Column 3 */}
         <div>

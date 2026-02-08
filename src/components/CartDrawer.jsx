@@ -81,7 +81,7 @@ const CartDrawer = React.memo(({ open, onClose, onCheckout }) => {
 
       {/* Panel */}
       <aside
-        className={`absolute right-0 top-0 h-full w-full max-w-md bg-[var(--color-surface)] shadow-xl transition-transform sm:w-3/4 xs:w-full ${
+        className={`absolute right-0 top-0 h-full w-full sm:max-w-md bg-[var(--color-surface)] shadow-xl transition-transform duration-300 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
         role="dialog"
