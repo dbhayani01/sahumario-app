@@ -137,6 +137,66 @@ The cart `subtotal` is calculated on the frontend and sent to `POST /api/payment
 
 ---
 
+## Supabase Setup
+
+The app uses [Supabase](https://supabase.com) (free tier) for authentication and order persistence.
+
+### 1. Create a project
+Go to [supabase.com](https://supabase.com) → New project. Copy the **Project URL** and **anon public key** from Settings → API.
+
+### 2. Add environment variables
+
+**.env (local dev):**
+```env
+REACT_APP_SUPABASE_URL=https://xxxxxxxxxxxxxxxxxxx.supabase.co
+REACT_APP_SUPABASE_ANON_KEY=eyxxxxxxxx...
+```
+
+**Vercel (production):** add the same two vars in Vercel dashboard → Settings → Environment Variables.
+
+### 3. Create the orders table
+
+Run the following in the Supabase **SQL Editor**:
+
+```sql
+create table public.orders (
+  id           text        primary key,
+  user_id      uuid        references auth.users on delete set null,
+  items        jsonb       not null default '[]',
+  subtotal     numeric(10,2) not null,
+  address      jsonb       not null default '{}',
+  payment      jsonb       not null default '{}',
+  created_at   timestamptz not null default now()
+);
+
+-- Row Level Security: users can only see and insert their own orders
+alter table public.orders enable row level security;
+
+create policy "select own orders"
+  on public.orders for select
+  using (auth.uid() = user_id);
+
+create policy "insert own orders"
+  on public.orders for insert
+  with check (auth.uid() = user_id);
+```
+
+### 4. Enable Email auth
+
+Supabase dashboard → Authentication → Providers → Email → Enable.
+
+### How it works
+
+| Feature | Behaviour |
+|---|---|
+| **Sign up / Login** | Handled by Supabase Auth (`signUp`, `signInWithPassword`) — no custom backend needed |
+| **Session restore** | Supabase client reads the session from `localStorage` on app load; no login-form flash |
+| **Token refresh** | Automatic — `onAuthStateChange` keeps `user` in sync |
+| **Orders (logged in)** | Written to and read from the `orders` table via Row Level Security |
+| **Orders (guest)** | Stored in `localStorage` only |
+
+---
+
 ## Architecture
 
 ### Routing

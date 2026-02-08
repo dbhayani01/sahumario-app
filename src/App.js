@@ -12,7 +12,7 @@ import CartDrawer from "./components/CartDrawer";
 import { useAuth } from "./context/AuthContext";
 
 export default function App() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [currentPage, setCurrentPage] = useState("home");
   const [showCart, setShowCart] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,6 +49,13 @@ export default function App() {
       case "orders":
         return <OrdersPage />;
       case "admin":
+        if (authLoading) {
+          return (
+            <div className="flex justify-center py-24">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-amber-600 border-t-transparent" />
+            </div>
+          );
+        }
         if (!user) {
           return (
             <LoginPage

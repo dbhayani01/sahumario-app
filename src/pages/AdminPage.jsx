@@ -195,7 +195,7 @@ export default function AdminPage({ setCurrentPage }) {
         </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-[var(--color-muted)]">
-            Signed in as <span className="font-medium text-[var(--color-text)]">{user?.name || user?.email}</span>
+            Signed in as <span className="font-medium text-[var(--color-text)]">{user?.user_metadata?.name || user?.email}</span>
           </span>
           <button
             onClick={() => { logout(); setCurrentPage("home"); }}
