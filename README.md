@@ -205,6 +205,29 @@ Removed dead code and duplicate files, reducing `src/` from ~48 to 34 files.
 
 ## Payment Integration Progress Log
 
+### Payment Tasks 4–8 — Full Payment Flow, UX & Polish (2026-02-08)
+
+**Task 4 — Frontend → Backend Validation Flow:**
+- `CheckoutPage.jsx` Step 4 now POSTs `{ razorpay_payment_id, razorpay_order_id, razorpay_signature }` to `/api/payments/razorpay/verify`
+- On verified success: `addOrder()` persists the full order (items, subtotal, shipping address, payment ID) to `OrdersContext` / localStorage, cart is cleared
+
+**Task 5 — Success / Failure UX States:**
+- `CheckoutPage.jsx` — `step` state (`"checkout"` | `"success"`): success screen shows green checkmark, order confirmation message, and Order ID
+- Failed verification surfaces a distinct "Payment could not be verified" error; network/declined errors mapped to friendly messages
+
+**Task 6 — Environment & Security Setup:**
+- `.env.example` — documents all env vars with inline comments separating browser-safe (`REACT_APP_*`) from server-side (`RAZORPAY_KEY_SECRET`)
+
+**Task 7 — Payment Logging & Debug Handling:**
+- `src/lib/paymentLogger.js` *(new)* — `paymentLog(level, event, data)` for consistent structured logs; `friendlyPaymentError(err)` maps raw Razorpay error messages to user-friendly strings
+
+**Task 8 — Final Checkout Polish:**
+- `CheckoutSteps` now advances to step 2 (Payment) while `loading` is true, giving visual progress feedback
+- `successRef` auto-focuses the "Payment Successful!" heading on mount for screen reader accessibility
+- `active:scale-95` added to all CTA buttons (pay, success actions, empty-cart browse) for tactile click feedback
+
+---
+
 ### Payment Task 3 — Vercel Backend Verification Endpoint (2026-02-08)
 
 Added two Vercel serverless functions and deployment config.

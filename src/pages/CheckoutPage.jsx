@@ -1,12 +1,14 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { ChevronLeft, AlertCircle, X, Package, CheckCircle2 } from "lucide-react";
 import { Card } from "../components/ui";
 import ShippingForm from "../components/ShippingForm";
 import CartSummary from "../components/CartSummary";
 import { useCart } from "../context/cartContext";
+import { useOrders } from "../context/OrdersContext";
 import { loadRazorpayScript, openRazorpayCheckout, isTestMode } from "../lib/razorpay";
+import { paymentLog, friendlyPaymentError } from "../lib/paymentLogger";
 
-// Step progress indicator — shows current position in checkout flow
+// Step progress indicator — advances to step 2 (Payment) while processing
 function CheckoutSteps({ current }) {
   const steps = [
     { id: 1, label: "Shipping" },
@@ -48,7 +50,7 @@ function CheckoutSteps({ current }) {
   );
 }
 
-// Inline dismissable error banner with icon
+// Inline dismissable error banner
 function ErrorBanner({ message, onDismiss }) {
   if (!message) return null;
   return (
@@ -71,15 +73,22 @@ function ErrorBanner({ message, onDismiss }) {
 
 export default function CheckoutPage({ setCurrentPage }) {
   const { items, subtotal, clearCart } = useCart();
+  const { addOrder } = useOrders();
   const [formData, setFormData] = useState({});
   const [formValid, setFormValid] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [step, setStep] = useState("checkout"); // "checkout" | "success"
+  const [confirmedOrderId, setConfirmedOrderId] = useState(null);
+  const successRef = useRef(null);
 
-  // Detect test mode so CartSummary can show a badge
   const testMode = isTestMode(process.env.REACT_APP_RAZORPAY_KEY_ID);
 
-  // ShippingForm calls this with (formValues, isValid) on every change
+  // Auto-focus success heading for screen readers when payment completes
+  useEffect(() => {
+    if (step === "success") successRef.current?.focus();
+  }, [step]);
+
   const handleFormChange = useCallback((data, valid) => {
     setFormData(data);
     setFormValid(!!valid);
@@ -101,8 +110,9 @@ export default function CheckoutPage({ setCurrentPage }) {
     try {
       setLoading(true);
       setError(null);
+      paymentLog("info", "INITIATED", { amount: subtotal });
 
-      // ── Step 1: Create order on backend ─────────────────────────────────────
+      // ── Step 1: Create order on backend ────────────────────────────────────
       const orderRes = await fetch("/api/payments/razorpay/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -127,11 +137,12 @@ export default function CheckoutPage({ setCurrentPage }) {
       }
 
       const order = await orderRes.json();
+      paymentLog("info", "ORDER_CREATED", { order_id: order.id });
 
-      // ── Step 2: Load Razorpay SDK on demand ─────────────────────────────────
+      // ── Step 2: Load Razorpay SDK on demand ────────────────────────────────
       await loadRazorpayScript();
 
-      // ── Step 3: Open checkout modal ─────────────────────────────────────────
+      // ── Step 3: Open checkout modal ────────────────────────────────────────
       const paymentResponse = await openRazorpayCheckout({
         key: razorpayKey,
         amount: order.amount,
@@ -150,28 +161,90 @@ export default function CheckoutPage({ setCurrentPage }) {
         },
         theme: { color: "#d97706" },
       });
+      paymentLog("info", "PAYMENT_CAPTURED", { payment_id: paymentResponse.razorpay_payment_id });
 
-      // ── Step 4: Payment captured — send to backend for verification (Task 3/4)
-      // paymentResponse = { razorpay_payment_id, razorpay_order_id, razorpay_signature }
-      console.info("[Checkout] Payment captured, awaiting verification:", paymentResponse);
-      // TODO (Task 4): POST paymentResponse to /api/payments/razorpay/verify
+      // ── Step 4: Verify signature on backend ────────────────────────────────
+      const verifyRes = await fetch("/api/payments/razorpay/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(paymentResponse),
+      });
 
-      // Temporary: clear cart and go to orders on capture
-      // Will be replaced by verified confirmation flow in Task 4/5
+      if (!verifyRes.ok) {
+        const body = await verifyRes.json().catch(() => ({}));
+        throw new Error(body.message || "Payment verification failed. Please contact support.");
+      }
+      paymentLog("info", "VERIFIED", { payment_id: paymentResponse.razorpay_payment_id });
+
+      // ── Persist order to context / localStorage ────────────────────────────
+      addOrder({
+        id: paymentResponse.razorpay_order_id,
+        items: items.map((i) => ({ ...i })),
+        subtotal,
+        address: { ...formData },
+        payment: { id: paymentResponse.razorpay_payment_id, method: "Razorpay" },
+        createdAt: new Date().toISOString(),
+      });
+
       clearCart();
-      setCurrentPage("orders");
+      setConfirmedOrderId(paymentResponse.razorpay_order_id);
+      setStep("success");
     } catch (err) {
-      // "CANCELLED" means the user closed the modal — don't show an error
-      if (err.message !== "CANCELLED") {
-        setError(err.message || "Payment failed. Please try again.");
-        console.error("[Checkout] Payment error:", err);
+      const msg = friendlyPaymentError(err);
+      if (msg) {
+        setError(msg);
+        paymentLog("error", "FAILED", { message: err.message });
+      } else {
+        paymentLog("info", "CANCELLED");
       }
     } finally {
       setLoading(false);
     }
-  }, [formValid, formData, subtotal, items, clearCart, setCurrentPage]);
+  }, [formValid, formData, subtotal, items, clearCart, addOrder]);
 
-  // Empty cart guard
+  // ── Success screen ──────────────────────────────────────────────────────────
+  if (step === "success") {
+    return (
+      <section className="mx-auto max-w-4xl px-4 py-16 text-center">
+        <div className="mb-6 flex justify-center">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+            <CheckCircle2 className="h-10 w-10 text-green-600" aria-hidden="true" />
+          </div>
+        </div>
+        <h2
+          ref={successRef}
+          tabIndex={-1}
+          className="text-2xl font-semibold outline-none"
+        >
+          Payment Successful!
+        </h2>
+        <p className="mt-2 text-[var(--color-muted)]">
+          Your order has been placed and is being processed.
+        </p>
+        {confirmedOrderId && (
+          <p className="mt-1 font-mono text-xs text-[var(--color-muted)]">
+            Order ID: {confirmedOrderId}
+          </p>
+        )}
+        <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <button
+            onClick={() => setCurrentPage("orders")}
+            className="rounded-xl bg-amber-600 px-6 py-3 font-medium text-white transition-colors hover:bg-amber-700 active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2"
+          >
+            View Orders
+          </button>
+          <button
+            onClick={() => setCurrentPage("perfumes")}
+            className="rounded-xl border border-[var(--color-border)] px-6 py-3 font-medium transition-colors hover:bg-[var(--color-surface-muted)] active:scale-95 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2"
+          >
+            Continue Shopping
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  // ── Empty cart guard ───────────────────────────────────────────────────────
   if (items.length === 0) {
     return (
       <section className="mx-auto max-w-4xl px-4 py-16 text-center">
@@ -185,7 +258,7 @@ export default function CheckoutPage({ setCurrentPage }) {
         </p>
         <button
           onClick={() => setCurrentPage("perfumes")}
-          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-amber-600 px-6 py-3 font-medium text-white transition-colors hover:bg-amber-700"
+          className="mt-6 inline-flex items-center gap-2 rounded-xl bg-amber-600 px-6 py-3 font-medium text-white transition-colors hover:bg-amber-700 active:scale-95"
         >
           Browse Collection
         </button>
@@ -205,7 +278,8 @@ export default function CheckoutPage({ setCurrentPage }) {
       </button>
 
       <h1 className="mt-2 text-2xl font-semibold">Checkout</h1>
-      <CheckoutSteps current={1} />
+      {/* Step advances to "Payment" while loading */}
+      <CheckoutSteps current={loading ? 2 : 1} />
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Shipping form — rendered below summary on mobile, left on desktop */}
