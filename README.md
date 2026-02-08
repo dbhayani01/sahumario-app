@@ -130,9 +130,13 @@ AuthContext exists but is not integrated into the main routing yet.
 | `REACT_APP_GITHUB_OWNER` | Admin only | GitHub repo owner (e.g. `dbhayani01`) |
 | `REACT_APP_GITHUB_REPO` | Admin only | GitHub repo name (e.g. `sahumario-app`) |
 | `REACT_APP_GITHUB_BRANCH` | No | Branch to commit to (default: `main`) |
+| `RAZORPAY_KEY_ID` | Yes (server) | Razorpay key ID — server-side only, never prefix with `REACT_APP_` |
+| `RAZORPAY_KEY_SECRET` | Yes (server) | Razorpay secret — **never expose to the browser** |
 
 > **Security:** `REACT_APP_GITHUB_TOKEN` is baked into the JS bundle at build time.
 > Use it **only** during local `npm start` sessions. Never build & deploy with this token set.
+>
+> `RAZORPAY_KEY_SECRET` must only ever be set as a server-side environment variable (Vercel dashboard → Settings → Environment Variables).
 
 ---
 
@@ -200,6 +204,21 @@ Removed dead code and duplicate files, reducing `src/` from ~48 to 34 files.
 ---
 
 ## Payment Integration Progress Log
+
+### Payment Task 3 — Vercel Backend Verification Endpoint (2026-02-08)
+
+Added two Vercel serverless functions and deployment config.
+
+**New files:**
+- `api/payments/razorpay/order.js` — `POST /api/payments/razorpay/order`: creates a Razorpay order via the Node SDK; validates amount, guards missing env vars, returns the order object
+- `api/payments/razorpay/verify.js` — `POST /api/payments/razorpay/verify`: verifies payment signature using `crypto.createHmac("sha256", key_secret).update(order_id + "|" + payment_id).digest("hex")` and compares with client-submitted `razorpay_signature`; returns `{ verified: true, payment_id }` on success
+- `vercel.json` — SPA fallback rewrite: all non-API routes serve `index.html` for client-side routing
+
+**Updated:**
+- `package.json` — added `razorpay` ^2.9.6 (Node SDK used by serverless functions)
+- README — documented `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` server-side env vars
+
+---
 
 ### Payment Task 2 — Payment Button Integration (2026-02-08)
 
