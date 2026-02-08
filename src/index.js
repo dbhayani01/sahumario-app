@@ -5,16 +5,19 @@ import "./index.css";
 import { OrdersProvider } from "./context/OrdersContext";
 import { CartProvider } from "./context/cartContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider } from "./context/AuthContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <ThemeProvider>
-      <OrdersProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </OrdersProvider>
+      <AuthProvider>
+        <OrdersProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </OrdersProvider>
+      </AuthProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

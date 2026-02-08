@@ -9,10 +9,12 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
+  LogOut,
 } from "lucide-react";
 import { Card } from "../components/ui";
 import initialProducts from "../data/products.json";
 import { getGitHubFile, commitGitHubFile } from "../lib/github";
+import { useAuth } from "../context/AuthContext";
 
 // Path inside the repository — must match where products.json lives
 const PRODUCTS_REPO_PATH = "src/data/products.json";
@@ -53,7 +55,9 @@ function FormField({ label, name, value, onChange, error, placeholder, type = "t
   );
 }
 
-export default function AdminPage() {
+export default function AdminPage({ setCurrentPage }) {
+  const { user, logout } = useAuth();
+
   // Local product state — seeded from products.json at mount
   const [products, setProducts] = useState(initialProducts);
 
@@ -189,13 +193,25 @@ export default function AdminPage() {
             Add, edit, or remove products. Click <strong>Commit to GitHub</strong> to publish.
           </p>
         </div>
-        <button
-          onClick={openAdd}
-          className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-amber-700 transition-colors"
-        >
-          <Plus className="h-4 w-4" aria-hidden="true" />
-          Add Product
-        </button>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-[var(--color-muted)]">
+            Signed in as <span className="font-medium text-[var(--color-text)]">{user?.name || user?.email}</span>
+          </span>
+          <button
+            onClick={() => { logout(); setCurrentPage("home"); }}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--color-border)] px-3 py-1.5 text-sm text-[var(--color-muted)] hover:text-red-600 hover:border-red-300 transition-colors"
+          >
+            <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
+            Logout
+          </button>
+          <button
+            onClick={openAdd}
+            className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-amber-700 transition-colors"
+          >
+            <Plus className="h-4 w-4" aria-hidden="true" />
+            Add Product
+          </button>
+        </div>
       </div>
 
       {/* Inline add / edit form */}

@@ -101,19 +101,22 @@ src/
 
 ### Admin Page Access
 
-The admin panel is **not protected by authentication** in the current implementation. Access is controlled by two passive gates:
+The admin panel is protected by a login wall backed by `AuthContext`:
 
 | Gate | How it works |
 |---|---|
-| **Link hidden by default** | The "Admin" link in the Footer only renders when `REACT_APP_ADMIN_ENABLED=true` is set in the environment. Without it the page is unreachable via the UI. |
-| **GitHub PAT required to publish** | "Commit to GitHub" requires `REACT_APP_GITHUB_TOKEN` in `.env`. Without it the commit fails gracefully — no products can be published. |
+| **Link hidden by default** | The "Admin" link in the Footer only renders when `REACT_APP_ADMIN_ENABLED=true` |
+| **Route guard in `App.js`** | If `currentPage === "admin"` and `user` is `null`, the router renders `<LoginPage redirectAfterLogin="admin" />` instead of the admin panel |
+| **Token-based session** | `AuthContext` calls `POST /auth/login` (or `/auth/signup`) on the backend; the JWT is stored in `localStorage` under `sahu_token` and sent as `Authorization: Bearer` on every API request via `src/lib/api.jsx` |
+| **GitHub PAT required to publish** | "Commit to GitHub" also requires `REACT_APP_GITHUB_TOKEN` in `.env` — a second independent gate for the write operation |
+| **Logout button in admin header** | Shows the logged-in user's name/email; clicking Logout clears the token and redirects home |
 
-**What is NOT in place yet:**
-
-- `src/context/AuthContext.jsx` implements token-based login/signup/logout (calls `/auth/login` and `/auth/signup`) but is **never imported in `App.js` and not wired to any route guard**.
-- There is no password prompt, session check, or role-based guard before rendering `<AdminPage />`.
-
-> **Recommendation before production deploy:** Add a route guard in `App.js` that checks `useAuth().token` and redirects unauthenticated visitors to `<LoginPage />` before rendering the admin case.
+**Auth flow:**
+1. Unauthenticated user navigates to admin → sees Login form
+2. Enters credentials → `POST /auth/login` → receives JWT
+3. JWT stored in `localStorage`; user redirected to admin panel
+4. All subsequent API calls carry the token automatically
+5. On 401 response, token is cleared and user must re-authenticate
 
 ---
 
