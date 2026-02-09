@@ -18,7 +18,6 @@ export async function api(path, options = {}) {
     credentials,
     signal,
     token: explicitToken,    // 👈 support explicit token
-    timeout = 5000,
   } = options;
 
   let url = buildUrl(path);
